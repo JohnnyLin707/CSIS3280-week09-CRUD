@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSIS 3280 Lecture 9 — CRUD (Ch.29) 中英对照教材</title>
+<style>
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1f2430; --muted:#6b7280;
+  --line:#e3e6eb; --accent:#2563eb; --accent2:#0f766e;
+  --en-bg:#fbfcfe; --zh-bg:#fffdf8; --code-bg:#1e2430; --code-ink:#e6edf3;
+  --nav-w:250px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px; line-height:1.7;
+}
+a{color:inherit;text-decoration:none}
+
+/* Top bar */
+.topbar{
+  position:sticky; top:0; z-index:50; background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(1.6) blur(10px);
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:18px; padding:12px 22px;
+  flex-wrap:wrap;
+}
+.brand{font-weight:700; font-size:17px; letter-spacing:-.2px; white-space:nowrap}
+.brand span{color:var(--accent)}
+.subtitle{color:var(--muted); font-size:13px; white-space:nowrap}
+.spacer{flex:1}
+.controls{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+.controls button{
+  border:1px solid var(--line); background:#fff; color:var(--ink);
+  border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer;
+  transition:.15s;
+}
+.controls button:hover{border-color:var(--accent); color:var(--accent)}
+.controls button.active{background:var(--accent); color:#fff; border-color:var(--accent)}
+
+/* Layout */
+.layout{display:flex; align-items:flex-start; max-width:1800px; margin:0 auto; gap:0}
+.sidebar{
+  width:var(--nav-w); flex:0 0 var(--nav-w); position:sticky; top:61px;
+  height:calc(100vh - 61px); overflow-y:auto; background:#fff;
+  border-right:1px solid var(--line); padding:14px 10px 40px;
+}
+.sidebar h2{font-size:11px; text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--muted); margin:8px 10px 12px}
+.sidebar nav a{
+  display:flex; align-items:center; gap:10px; padding:7px 10px;
+  border-radius:7px; font-size:13px; color:#374151; margin-bottom:2px;
+  border-left:3px solid transparent;
+}
+.sidebar nav a:hover{background:#f3f4f6}
+.sidebar nav a.active{background:#eff6ff; color:var(--accent); border-left-color:var(--accent); font-weight:600}
+.navnum{flex:0 0 24px; text-align:right; color:#9ca3af; font-variant-numeric:tabular-nums; font-size:12px}
+.sidebar nav a.active .navnum{color:var(--accent)}
+.navtitle{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+
+main{flex:1; min-width:0; padding:26px 26px 80px}
+
+/* Section header */
+.section-intro{
+  background:linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff;
+  border-radius:14px; padding:26px 30px; margin-bottom:26px;
+}
+.section-intro h1{margin:0 0 6px; font-size:26px; letter-spacing:-.4px}
+.section-intro p{margin:0; opacity:.85; font-size:14px}
+
+.page{
+  background:var(--paper); border:1px solid var(--line); border-radius:12px;
+  margin-bottom:22px; overflow:hidden; box-shadow:0 1px 3px rgba(16,24,40,.04);
+  scroll-margin-top:72px;
+}
+.page-head{
+  display:flex; align-items:center; gap:14px; padding:13px 18px;
+  background:#fafbfc; border-bottom:1px solid var(--line);
+}
+.pageno{
+  flex:0 0 auto; background:var(--accent); color:#fff; font-size:12px;
+  font-weight:700; padding:4px 10px; border-radius:20px; letter-spacing:.3px;
+}
+.headtitles{flex:1; min-width:0}
+.ht-en{font-weight:700; font-size:16px; line-height:1.3}
+.ht-zh{color:var(--muted); font-size:13px; line-height:1.4}
+.shot-btn{
+  border:1px solid var(--line); background:#fff; border-radius:7px;
+  padding:5px 11px; font-size:12px; cursor:pointer; color:var(--muted); flex:0 0 auto;
+}
+.shot-btn:hover{color:var(--accent); border-color:var(--accent)}
+
+.columns{display:grid; grid-template-columns:1fr 1fr}
+.col{padding:18px 20px 24px; min-width:0}
+.col-en{background:var(--en-bg); border-right:1px solid var(--line)}
+.col-zh{background:var(--zh-bg)}
+.col-label{
+  display:inline-block; font-size:10px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; color:#9ca3af; border:1px solid var(--line);
+  border-radius:5px; padding:2px 8px; margin-bottom:12px;
+}
+.col-zh .col-label{color:#b45309; border-color:#fde68a}
+
+/* text elements */
+.bullets{margin:0 0 12px; padding-left:20px}
+.bullets li{margin-bottom:7px}
+.bullets li::marker{color:var(--accent)}
+.col-zh .bullets li::marker{color:var(--accent2)}
+p{margin:0 0 12px}
+.section-only{color:#cbd5e1; font-style:italic}
+.note{
+  background:#fffbeb; border-left:3px solid #f59e0b; border-radius:0 7px 7px 0;
+  padding:10px 14px; margin:12px 0 0; font-size:13px; color:#78350f;
+}
+.note div + div{margin-top:5px}
+
+/* flow diagram */
+.flow{
+  border:1px dashed #cbd5e1; border-radius:9px; padding:12px 14px;
+  background:#fff; margin-top:6px;
+}
+.flow-step{font-size:13px; padding:4px 0; color:#334155}
+.flow-step:not(:last-child){border-bottom:1px dotted #e5e7eb; margin-bottom:4px}
+
+/* code */
+.codebox{
+  background:var(--code-bg); border-radius:9px; margin:12px 0 4px;
+  overflow:hidden; border:1px solid #111827;
+}
+.codefile{
+  background:#2a3240; color:#93c5fd; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11px; padding:6px 14px; border-bottom:1px solid #111827;
+}
+.codebox pre{margin:0; padding:14px 16px; overflow-x:auto}
+.codebox code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  font-size:12.5px; line-height:1.62; color:var(--code-ink);
+  white-space:pre; tab-size:4;
+}
+
+/* mode toggles */
+body.en-only .col-zh{display:none}
+body.zh-only .col-en{display:none}
+body.en-only .columns,body.zh-only .columns{grid-template-columns:1fr}
+body.en-only .col-en{border-right:none}
+body.zh-only .col-zh{border-left:none}
+
+/* lightbox */
+.lightbox{
+  display:none; position:fixed; inset:0; z-index:100;
+  background:rgba(15,23,42,.82); align-items:center; justify-content:center; padding:24px;
+}
+.lightbox.show{display:flex}
+.lightbox img{max-width:96vw; max-height:92vh; background:#fff; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.lightbox .close{
+  position:absolute; top:18px; right:22px; color:#fff; font-size:30px;
+  background:none; border:0; cursor:pointer; line-height:1;
+}
+.lightbox .cap{position:absolute; bottom:16px; color:#cbd5e1; font-size:12px}
+
+.footer{color:var(--muted); font-size:12px; text-align:center; padding:10px 0 40px}
+
+@media (max-width:960px){
+  .sidebar{display:none}
+  main{padding:18px 14px 60px}
+  .columns{grid-template-columns:1fr}
+  .col-en{border-right:none; border-bottom:1px solid var(--line)}
+  .subtitle{display:none}
+}
+@media print{
+  .topbar,.sidebar,.shot-btn,.lightbox{display:none!important}
+  body{background:#fff; font-size:11px}
+  main{padding:0}
+  .page{break-inside:avoid; box-shadow:none; margin-bottom:12px}
+  .col{padding:10px}
+  .codebox code{font-size:9px}
+  .section-intro{background:#1e3a8a!important; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">CSIS 3280 · <span>Lecture 9</span></div>
+  <div class="subtitle">CRUD (CH 29) — 中英对照教材 · 36 页</div>
+  <div class="spacer"></div>
+  <div class="controls">
+    <button type="button" class="mode active" data-mode="both">双语</button>
+    <button type="button" class="mode" data-mode="en-only">仅英文</button>
+    <button type="button" class="mode" data-mode="zh-only">仅中文</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h2>Contents 目录</h2>
+    <nav id="nav">
+<a href="#page-01" data-n="1"><span class="navnum">1</span><span class="navtitle">CSIS 3280: Lecture 9</span></a>
+<a href="#page-02" data-n="2"><span class="navnum">2</span><span class="navtitle">Notes and Announcement</span></a>
+<a href="#page-03" data-n="3"><span class="navnum">3</span><span class="navtitle">Midterm Feedback</span></a>
+<a href="#page-04" data-n="4"><span class="navnum">4</span><span class="navtitle">CRUD (CH 29)</span></a>
+<a href="#page-05" data-n="5"><span class="navnum">5</span><span class="navtitle">CRUD</span></a>
+<a href="#page-06" data-n="6"><span class="navnum">6</span><span class="navtitle">Creating a new record</span></a>
+<a href="#page-07" data-n="7"><span class="navnum">7</span><span class="navtitle">Creating a new record</span></a>
+<a href="#page-08" data-n="8"><span class="navnum">8</span><span class="navtitle">Creating a new record</span></a>
+<a href="#page-09" data-n="9"><span class="navnum">9</span><span class="navtitle">Creating a new record</span></a>
+<a href="#page-10" data-n="10"><span class="navnum">10</span><span class="navtitle">Reading the records</span></a>
+<a href="#page-11" data-n="11"><span class="navnum">11</span><span class="navtitle">Reading the records</span></a>
+<a href="#page-12" data-n="12"><span class="navnum">12</span><span class="navtitle">Reading the records</span></a>
+<a href="#page-13" data-n="13"><span class="navnum">13</span><span class="navtitle">Updating a record</span></a>
+<a href="#page-14" data-n="14"><span class="navnum">14</span><span class="navtitle">Updating a record</span></a>
+<a href="#page-15" data-n="15"><span class="navnum">15</span><span class="navtitle">Updating a record</span></a>
+<a href="#page-16" data-n="16"><span class="navnum">16</span><span class="navtitle">Updating a record</span></a>
+<a href="#page-17" data-n="17"><span class="navnum">17</span><span class="navtitle">Deleting record(s)</span></a>
+<a href="#page-18" data-n="18"><span class="navnum">18</span><span class="navtitle">Deleting record(s)</span></a>
+<a href="#page-19" data-n="19"><span class="navnum">19</span><span class="navtitle">Displaying a single record</span></a>
+<a href="#page-20" data-n="20"><span class="navnum">20</span><span class="navtitle">CRUD with Validation and Auth</span></a>
+<a href="#page-21" data-n="21"><span class="navnum">21</span><span class="navtitle">Adding validation and Auth</span></a>
+<a href="#page-22" data-n="22"><span class="navnum">22</span><span class="navtitle">Adding validation …</span></a>
+<a href="#page-23" data-n="23"><span class="navnum">23</span><span class="navtitle">Adding validation …</span></a>
+<a href="#page-24" data-n="24"><span class="navnum">24</span><span class="navtitle">Adding validation …</span></a>
+<a href="#page-25" data-n="25"><span class="navnum">25</span><span class="navtitle">Adding validation …</span></a>
+<a href="#page-26" data-n="26"><span class="navnum">26</span><span class="navtitle">Adding validation …</span></a>
+<a href="#page-27" data-n="27"><span class="navnum">27</span><span class="navtitle">Adding validation …</span></a>
+<a href="#page-28" data-n="28"><span class="navnum">28</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-29" data-n="29"><span class="navnum">29</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-30" data-n="30"><span class="navnum">30</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-31" data-n="31"><span class="navnum">31</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-32" data-n="32"><span class="navnum">32</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-33" data-n="33"><span class="navnum">33</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-34" data-n="34"><span class="navnum">34</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-35" data-n="35"><span class="navnum">35</span><span class="navtitle">Adding auth …</span></a>
+<a href="#page-36" data-n="36"><span class="navnum">36</span><span class="navtitle">Adding auth …</span></a>
+    </nav>
+  </aside>
+  <main>
+    <div class="section-intro">
+      <h1>CRUD (CH 29)</h1>
+      <p>英文原文在左，中文翻译在右 · 点击每页右上角“原图”查看课件截图</p>
+    </div>
+
+<section class="page" id="page-01" data-n="1">
+  <div class="page-head">
+    <div class="pageno">Page 1</div>
+    <div class="headtitles">
+      <div class="ht-en">CSIS 3280: Lecture 9</div>
+      <div class="ht-zh">CSIS 3280：第 9 讲</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page01.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><p>CRUD (CH 29)</p></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><p>CRUD（第 29 章）</p></div>
+  </div>
+</section>
+
+<section class="page" id="page-02" data-n="2">
+  <div class="page-head">
+    <div class="pageno">Page 2</div>
+    <div class="headtitles">
+      <div class="ht-en">Notes and Announcement</div>
+      <div class="ht-zh">通知与公告</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page02.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Midterm mark is online</li><li>The maximum mark requirement was reduced to 25</li><li>Arrange an office hour time with me if you want to discuss it</li><li>Assignment 4 will be made available today</li><li>The deadline is next week</li><li>Use it to practice for your Quiz 2</li><li>Quiz 2 will be in two weeks time</li><li>Focus on CRUD</li></ul></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>期中考试成绩已发布</li><li>及格分数要求已降低至 25 分</li><li>如果想讨论成绩，请与我预约办公时间</li><li>作业 4 今天发布</li><li>截止日期是下周</li><li>可用它来练习测验 2</li><li>测验 2 将在两周后进行</li><li>重点考察 CRUD</li></ul></div>
+  </div>
+</section>
+
+<section class="page" id="page-03" data-n="3">
+  <div class="page-head">
+    <div class="pageno">Page 3</div>
+    <div class="headtitles">
+      <div class="ht-en">Midterm Feedback</div>
+      <div class="ht-zh">期中反馈</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page03.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>No GLOBALS variable!</li><li>Validation and accessing the form submitted data</li><li>Always use filter_input</li><li>Do NOT USE $_POST → you will be given severe penalty if you do that in Quiz 2 and final exam</li><li>FILTER_VALIDATE_REGEXP is not similar to FILTER_VALIDATE_INT</li><li>Where can you get the action 'cases'?</li><li>Look at the tab menu on the header navigation bar</li><li>Look at the form action</li><li>About form submission action</li><li>You can have the same action route to branch according to whether the user has submitted the form or not, or whether the user has login or not</li><li>Work on your index, application, controllers, data repo, one route action at a time</li></ul></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>不要使用 GLOBALS 变量！</li><li>验证并访问表单提交的数据</li><li>始终使用 filter_input</li><li>不要使用 $_POST → 如果在测验 2 和期末考试中这样做，将会被严重扣分</li><li>FILTER_VALIDATE_REGEXP 与 FILTER_VALIDATE_INT 并不相同</li><li>从哪里可以获取 action 的 'case'？</li><li>查看顶部导航栏中的标签菜单</li><li>查看表单的 action</li><li>关于表单提交 action</li><li>同一个 action 路由可以根据用户是否提交了表单、是否登录来进行分支</li><li>编写 index、application、controllers、data repo 时，一次只处理一个路由 action</li></ul></div>
+  </div>
+</section>
+
+<section class="page" id="page-04" data-n="4">
+  <div class="page-head">
+    <div class="pageno">Page 4</div>
+    <div class="headtitles">
+      <div class="ht-en">CRUD (CH 29)</div>
+      <div class="ht-zh">CRUD（第 29 章）</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page04.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><p class="section-only">—</p></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><p class="section-only">—</p></div>
+  </div>
+</section>
+
+<section class="page" id="page-05" data-n="5">
+  <div class="page-head">
+    <div class="pageno">Page 5</div>
+    <div class="headtitles">
+      <div class="ht-en">CRUD</div>
+      <div class="ht-zh">CRUD 概览</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page05.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Any database-driven mobile or web application revolves around the four CRUD (Create Read Update and Delete) operations</li></ul><div class="flow"><div class="flow-step">Front controller → Application class → Switch statement</div><div class="flow-step">Action controller → ProductController class → page method</div><div class="flow-step">Repository / Data Access Object → Repository class → CRUD method</div><div class="flow-step">Database</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>任何由数据库驱动的移动或 Web 应用都围绕四种 CRUD 操作展开：创建（Create）、读取（Read）、更新（Update）和删除（Delete）</li></ul><div class="flow"><div class="flow-step">前端控制器 → Application 类 → Switch 语句</div><div class="flow-step">动作控制器 → ProductController 类 → 页面方法</div><div class="flow-step">仓储 / 数据访问对象 → Repository 类 → CRUD 方法</div><div class="flow-step">数据库</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-06" data-n="6">
+  <div class="page-head">
+    <div class="pageno">Page 6</div>
+    <div class="headtitles">
+      <div class="ht-en">Creating a new record</div>
+      <div class="ht-zh">创建新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page06.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Creating a new record is done using INSERT statement</li><li>Depending on the structure of your page, you may need to have a specific template to display the form to insert a new record</li><li>The Application class has two action cases to handle the Create functionality: 'create' and 'processCreate'. These two actions proceed to two controller methods</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>class Application
+{
+    public function run(): void
+    {
+        // ...
+        case 'create':
+            $this-&gt;productController-&gt;create();
+            break;
+
+        case 'processCreate':
+            $description = filter_input(INPUT_POST, 'description');
+            $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+                FILTER_FLAG_ALLOW_FRACTION);
+
+            if ($isPostSubmission &amp;&amp; !empty($description) &amp;&amp; !empty($price)) {
+                $this-&gt;productController-&gt;processCreate($description, $price);
+            } else {
+                $this-&gt;defaultController-&gt;error(
+                    'error - new product needs a description and price (via a POST request)');
+            }
+            break;
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>创建新记录使用 INSERT 语句完成</li><li>根据页面的结构，你可能需要一个专门的模板来显示用于插入新记录的表单</li><li>Application 类有两个 action case 来处理创建功能：'create' 和 'processCreate'。这两个 action 会转到两个控制器方法</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>class Application（前端控制器）
+{
+    public function run(): void
+    {
+        // ...
+        // 'create' 动作：显示创建表单
+        case 'create':
+            $this-&gt;productController-&gt;create();
+            break;
+
+        // 'processCreate' 动作：处理表单提交
+        case 'processCreate':
+            // 使用 filter_input 安全地读取并过滤表单数据
+            $description = filter_input(INPUT_POST, 'description');
+            $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+                FILTER_FLAG_ALLOW_FRACTION);
+
+            // 只有在是 POST 提交且数据不为空时才处理
+            if ($isPostSubmission &amp;&amp; !empty($description) &amp;&amp; !empty($price)) {
+                $this-&gt;productController-&gt;processCreate($description, $price);
+            } else {
+                // 否则转到错误页面
+                $this-&gt;defaultController-&gt;error(
+                    'error - new product needs a description and price (via a POST request)');
+            }
+            break;
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-07" data-n="7">
+  <div class="page-head">
+    <div class="pageno">Page 7</div>
+    <div class="headtitles">
+      <div class="ht-en">Creating a new record</div>
+      <div class="ht-zh">创建新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page07.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>The ProductController class has two methods:</li></ul><ul class="bullets"><li>create() → this will display the form template</li><li>processCreate() → this will call ProductRepository's insert() method</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function create(): void
+    {
+        $template = 'product/create.html.twig';
+        $args = [];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+
+    public function processCreate(string $description, float $price): void
+    {
+        $newObjectId = $this-&gt;productRepository-&gt;insert($description, $price);
+
+        $_SESSION['id'] = $newObjectId;
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div><div class="note"><div>A successful data insertion will lead the user to the listing product page</div><div>Create NEW Product page → Description / Price / Submit</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>ProductController 类有两个方法：</li></ul><ul class="bullets"><li>create() → 显示表单模板</li><li>processCreate() → 调用 ProductRepository 的 insert() 方法</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    // 显示用于输入新产品的表单
+    public function create(): void
+    {
+        $template = 'product/create.html.twig';
+        $args = [];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+
+    // 处理表单提交，调用仓储层的 insert()
+    public function processCreate(string $description, float $price): void
+    {
+        $newObjectId = $this-&gt;productRepository-&gt;insert($description, $price);
+
+        // 将新记录 id 存入 session，用于高亮显示
+        $_SESSION['id'] = $newObjectId;
+
+        // 插入成功后重定向到产品列表页
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div><div class="note"><div>数据成功插入后，用户将被引导到产品列表页面</div><div>Create NEW Product 页面 → 描述 / 价格 / 提交</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-08" data-n="8">
+  <div class="page-head">
+    <div class="pageno">Page 8</div>
+    <div class="headtitles">
+      <div class="ht-en">Creating a new record</div>
+      <div class="ht-zh">创建新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page08.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>The submitted data needs to be processed using prepare → bindParam → execute. Notice that:</li><li>The insert() method was called from ProductController's processCreate() method</li><li>The processCreate() was called because the form was submitted</li><li>The form was displayed using ProductController's create() method</li></ul><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function insert(string $description, float $price): int
+    {
+        if (NULL == $this-&gt;connection) return -1;
+
+        $sql = 'INSERT INTO product (description, price)'
+             . ' VALUES (:description, :price)';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+
+        $stmt-&gt;bindParam(':description', $description);
+        $stmt-&gt;bindParam(':price', $price);
+
+        $success = $stmt-&gt;execute();
+
+        if ($success) {
+            return $this-&gt;connection-&gt;lastInsertId();
+        } else {
+            return -1;
+        }
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>提交的数据需要使用 prepare → bindParam → execute 来处理。注意：</li><li>insert() 方法是由 ProductController 的 processCreate() 方法调用的</li><li>processCreate() 之所以被调用，是因为表单被提交了</li><li>表单是由 ProductController 的 create() 方法显示的</li></ul><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function insert(string $description, float $price): int
+    {
+        if (NULL == $this-&gt;connection) return -1;
+
+        // 使用命名占位符，防止 SQL 注入
+        $sql = 'INSERT INTO product (description, price)'
+             . ' VALUES (:description, :price)';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+
+        // 绑定参数
+        $stmt-&gt;bindParam(':description', $description);
+        $stmt-&gt;bindParam(':price', $price);
+
+        $success = $stmt-&gt;execute();
+
+        // 插入成功则返回最后插入的 id
+        if ($success) {
+            return $this-&gt;connection-&gt;lastInsertId();
+        } else {
+            return -1;
+        }
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-09" data-n="9">
+  <div class="page-head">
+    <div class="pageno">Page 9</div>
+    <div class="headtitles">
+      <div class="ht-en">Creating a new record</div>
+      <div class="ht-zh">创建新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page09.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>When a new record was inserted to the DB, the last inserted ID can be returned to the object</li><li>This can be used to highlight a new entry</li><li>The last inserted ID will only be available after a successful insert action. If the user refresh the listing (Read) of products, the last inserted ID will disappear</li></ul><div class="note"><div>A successful data insertion will lead the user to the listing product page</div><div>Product List page — ID / Description / Price / Detail / Show / Edit / Delete / Delete ALL products / Create NEW product</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>当新记录被插入数据库后，最后插入的 ID 可以返回给对象</li><li>这可以用来高亮显示新增的条目</li><li>最后插入的 ID 只有在插入操作成功后才可用。如果用户刷新产品列表（读取），最后插入的 ID 就会消失</li></ul><div class="note"><div>数据成功插入后，用户将被引导到产品列表页面</div><div>产品列表页 — ID / 描述 / 价格 / 详情 / 显示 / 编辑 / 删除 / 删除所有产品 / 创建新产品的按钮</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-10" data-n="10">
+  <div class="page-head">
+    <div class="pageno">Page 10</div>
+    <div class="headtitles">
+      <div class="ht-en">Reading the records</div>
+      <div class="ht-zh">读取记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page10.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Reading the records is done using SELECT statement</li><li>The Application class has an action cases to handle the Read functionality: 'product'. This action proceed to list() controller method</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>class Application
+{
+    public function run(): void
+    {
+        $action = filter_input(INPUT_GET, 'action');
+        $isPostSubmission = ($_SERVER['REQUEST_METHOD'] === 'POST');
+
+        switch ($action)
+        {
+            case 'products':
+                $this-&gt;productController-&gt;list();
+                break;
+        }
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>读取记录使用 SELECT 语句完成</li><li>Application 类有一个用于处理读取功能的 action case：'product'。该 action 会转到 list() 控制器方法</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>class Application
+{
+    public function run(): void
+    {
+        $action = filter_input(INPUT_GET, 'action');
+        $isPostSubmission = ($_SERVER['REQUEST_METHOD'] === 'POST');
+
+        switch ($action)
+        {
+            // 'products' 动作：调用控制器的 list() 方法
+            case 'products':
+                $this-&gt;productController-&gt;list();
+                break;
+        }
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-11" data-n="11">
+  <div class="page-head">
+    <div class="pageno">Page 11</div>
+    <div class="headtitles">
+      <div class="ht-en">Reading the records</div>
+      <div class="ht-zh">读取记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page11.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Unless your application provide a filtered read or pagination, the read functionality is pretty straightforward handled by findAll() method</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function list(): void
+    {
+        $products = $this-&gt;productRepository-&gt;findAll();
+        $id = $this-&gt;getIdFromSession();
+
+        $template = 'product/list.html.twig';
+        $args = [
+            'products' =&gt; $products,
+            'id' =&gt; $id
+        ];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>除非你的应用提供过滤读取或分页功能，否则读取功能通常由 findAll() 方法直接处理，非常简单</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function list(): void
+    {
+        // 通过仓储层取得所有记录
+        $products = $this-&gt;productRepository-&gt;findAll();
+        // 从 session 中取出需要高亮的 id
+        $id = $this-&gt;getIdFromSession();
+
+        $template = 'product/list.html.twig';
+        $args = [
+            'products' =&gt; $products,
+            'id' =&gt; $id
+        ];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-12" data-n="12">
+  <div class="page-head">
+    <div class="pageno">Page 12</div>
+    <div class="headtitles">
+      <div class="ht-en">Reading the records</div>
+      <div class="ht-zh">读取记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page12.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>The read is done using prepare → execute. Notice that:</li><li>The records were fetched to a class</li><li>All the records were fetched</li></ul><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function findAll(): array
+    {
+        if (NULL == $this-&gt;connection) return [];
+        $sql = 'SELECT * FROM product';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;execute();
+        $stmt-&gt;setFetchMode(\PDO::FETCH_CLASS, Product::class);
+        $products = $stmt-&gt;fetchAll();
+        return $products;
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>读取使用 prepare → execute 完成。注意：</li><li>记录被提取（fetch）到一个类中</li><li>所有记录都被提取出来了</li></ul><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function findAll(): array
+    {
+        if (NULL == $this-&gt;connection) return [];
+        $sql = 'SELECT * FROM product';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;execute();
+        // 将每一行记录映射为 Product 类的对象
+        $stmt-&gt;setFetchMode(\PDO::FETCH_CLASS, Product::class);
+        // fetchAll() 取出全部记录
+        $products = $stmt-&gt;fetchAll();
+        return $products;
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-13" data-n="13">
+  <div class="page-head">
+    <div class="pageno">Page 13</div>
+    <div class="headtitles">
+      <div class="ht-en">Updating a record</div>
+      <div class="ht-zh">更新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page13.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Updating a record is done using UPDATE statement</li><li>Update always needs two stage of operations such that the first stage is to load a specific record to edit; while the second stage is to process the edit</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'edit':
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    if (empty($id)) {
+        $this-&gt;defaultController-&gt;error(
+            'error - To edit a product, an integer ID must be provided');
+    } else {
+        $this-&gt;productController-&gt;edit($id);
+    }
+    break;
+
+case 'processEdit':
+    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+    $description = filter_input(INPUT_POST, 'description');
+    $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+        FILTER_FLAG_ALLOW_FRACTION);
+
+    if ($isPostSubmission &amp;&amp; !empty($id) &amp;&amp; !empty($description)
+        &amp;&amp; !empty($price)) {
+        $this-&gt;productController-&gt;processEdit($id, $description, $price);
+    } else {
+        $this-&gt;defaultController-&gt;error(
+            'error - Missing data (or not POST method) when trying to update product');
+    }
+    break;</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>更新记录使用 UPDATE 语句完成</li><li>更新操作总是需要两个阶段：第一阶段是加载要编辑的特定记录；第二阶段是处理编辑</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'edit':
+    // 第一阶段：从 GET 参数读取要编辑的记录 id
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    if (empty($id)) {
+        $this-&gt;defaultController-&gt;error(
+            'error - To edit a product, an integer ID must be provided');
+    } else {
+        $this-&gt;productController-&gt;edit($id);
+    }
+    break;
+
+case 'processEdit':
+    // 第二阶段：从 POST 表单读取编辑后的数据
+    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+    $description = filter_input(INPUT_POST, 'description');
+    $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+        FILTER_FLAG_ALLOW_FRACTION);
+
+    if ($isPostSubmission &amp;&amp; !empty($id) &amp;&amp; !empty($description)
+        &amp;&amp; !empty($price)) {
+        $this-&gt;productController-&gt;processEdit($id, $description, $price);
+    } else {
+        $this-&gt;defaultController-&gt;error(
+            'error - Missing data (or not POST method) when trying to update product');
+    }
+    break;</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-14" data-n="14">
+  <div class="page-head">
+    <div class="pageno">Page 14</div>
+    <div class="headtitles">
+      <div class="ht-en">Updating a record</div>
+      <div class="ht-zh">更新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page14.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>The ProductController class has two methods:</li></ul><ul class="bullets"><li>edit() → this will load the form with record to be edited. The record was obtained using ProductRepository's find() method</li><li>processEdit() → this will call ProductRepository's update() method</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function edit(int $id): void
+    {
+        $product = $this-&gt;productRepository-&gt;find($id);
+
+        $template = 'product/edit.html.twig';
+        $args = [
+            'product' =&gt; $product
+        ];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+
+    public function processEdit(int $id, string $description,
+        float $price): void
+    {
+        $this-&gt;productRepository-&gt;update($id, $description, $price);
+
+        // Store ID of product to highlight in the SESSION
+        $_SESSION['id'] = $id;
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div><div class="note"><div>Record with id=2 will be updated. Note that the ID input form was made readonly so that it cannot be modified. Why???</div><div>Edit Product page — ID: 2 / Description: Siege Tower / Price: 5999.99 / Submit</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>ProductController 类有两个方法：</li></ul><ul class="bullets"><li>edit() → 加载带有待编辑记录的表单。记录通过 ProductRepository 的 find() 方法获取</li><li>processEdit() → 调用 ProductRepository 的 update() 方法</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    // 加载要编辑的记录并渲染编辑表单
+    public function edit(int $id): void
+    {
+        $product = $this-&gt;productRepository-&gt;find($id);
+
+        $template = 'product/edit.html.twig';
+        $args = [
+            'product' =&gt; $product
+        ];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+
+    // 处理编辑表单的提交
+    public function processEdit(int $id, string $description,
+        float $price): void
+    {
+        $this-&gt;productRepository-&gt;update($id, $description, $price);
+
+        // 将产品 id 存入 SESSION，用于高亮显示
+        $_SESSION['id'] = $id;
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div><div class="note"><div>id=2 的记录将被更新。注意，ID 输入框被设为只读（readonly），因此无法修改。为什么？？？</div><div>编辑产品页面 — ID: 2 / 描述: Siege Tower / 价格: 5999.99 / 提交</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-15" data-n="15">
+  <div class="page-head">
+    <div class="pageno">Page 15</div>
+    <div class="headtitles">
+      <div class="ht-en">Updating a record</div>
+      <div class="ht-zh">更新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page15.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>The submitted data needs to be processed using prepare → bindParam → execute. Notice that:</li><li>The update() method was called from ProductController's processEdit() method</li><li>The processEdit() was called because the edit form was submitted</li><li>Notice the use of UPDATE and WHERE clause in the SQL query</li></ul><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function update(int $id, string $description, float $price): bool
+    {
+        if (NULL == $this-&gt;connection) return false;
+        $sql = 'UPDATE product SET description = :description, price = :price WHERE id=:id';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':id', $id);
+        $stmt-&gt;bindParam(':description', $description);
+        $stmt-&gt;bindParam(':price', $price);
+        $success = $stmt-&gt;execute();
+        return $success;
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>提交的数据需要使用 prepare → bindParam → execute 来处理。注意：</li><li>update() 方法是由 ProductController 的 processEdit() 方法调用的</li><li>processEdit() 之所以被调用，是因为编辑表单被提交了</li><li>注意 SQL 查询中使用了 UPDATE 和 WHERE 子句（WHERE 用于指定更新哪一条记录）</li></ul><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function update(int $id, string $description, float $price): bool
+    {
+        if (NULL == $this-&gt;connection) return false;
+        // 使用 WHERE id=:id 限定只更新指定记录
+        $sql = 'UPDATE product SET description = :description, price = :price WHERE id=:id';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':id', $id);
+        $stmt-&gt;bindParam(':description', $description);
+        $stmt-&gt;bindParam(':price', $price);
+        $success = $stmt-&gt;execute();
+        return $success;
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-16" data-n="16">
+  <div class="page-head">
+    <div class="pageno">Page 16</div>
+    <div class="headtitles">
+      <div class="ht-en">Updating a record</div>
+      <div class="ht-zh">更新记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page16.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>The record's id can be stored as a session variable in ProductController's processEdit() method</li><li>This can be used to highlight the updated entry</li></ul><div class="note"><div>A successful data update will lead the user to the listing product page</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>记录的 id 可以存储在 ProductController 的 processEdit() 方法的会话（session）变量中</li><li>这可以用来高亮显示更新后的条目</li></ul><div class="note"><div>数据成功更新后，用户将被引导到产品列表页面</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-17" data-n="17">
+  <div class="page-head">
+    <div class="pageno">Page 17</div>
+    <div class="headtitles">
+      <div class="ht-en">Deleting record(s)</div>
+      <div class="ht-zh">删除记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page17.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Deleting a record is done using DELETE statement</li><li>You need to be cautious in deleting record. You need to ask for a confirmation to the user in performing any delete</li><li>Deleting all record is generally not a functionality that is advisable to be provided</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'deleteAll':
+    if ($isPostSubmission) {
+        $this-&gt;productController-&gt;deleteAll();
+    } else {
+        $this-&gt;defaultController-&gt;
+            error('error - not a POST request');
+    }
+    break;
+
+case 'delete':
+    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+    if ($isPostSubmission &amp;&amp; !empty($id)) {
+        $this-&gt;productController-&gt;delete($id);
+    } else {
+        $this-&gt;defaultController-&gt;error('error - the integer id was not provided by a POST request');
+    }
+    break;</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>删除记录使用 DELETE 语句完成</li><li>删除记录时需要谨慎。执行任何删除操作前都需要向用户请求确认</li><li>通常不建议提供“删除所有记录”的功能</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'deleteAll':
+    // 删除全部：必须是 POST 请求
+    if ($isPostSubmission) {
+        $this-&gt;productController-&gt;deleteAll();
+    } else {
+        $this-&gt;defaultController-&gt;
+            error('error - not a POST request');
+    }
+    break;
+
+case 'delete':
+    // 删除单条：需要传入整数 id 且必须是 POST 请求
+    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+    if ($isPostSubmission &amp;&amp; !empty($id)) {
+        $this-&gt;productController-&gt;delete($id);
+    } else {
+        $this-&gt;defaultController-&gt;error('error - the integer id was not provided by a POST request');
+    }
+    break;</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-18" data-n="18">
+  <div class="page-head">
+    <div class="pageno">Page 18</div>
+    <div class="headtitles">
+      <div class="ht-en">Deleting record(s)</div>
+      <div class="ht-zh">删除记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page18.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Deleting a record is straightforward. You need to bind the parameter to delete a specific record</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function deleteAll(): void
+    {
+        $this-&gt;productRepository-&gt;deleteAll();
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+
+    public function delete(int $id): void
+    {
+        $this-&gt;productRepository-&gt;delete($id);
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    public function deleteAll(): int
+    {
+        if (NULL == $this-&gt;connection) return 0;
+        $sql = 'DELETE FROM product';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;execute();
+        $numRowsAffected = $stmt-&gt;rowCount();
+        return $numRowsAffected;
+    }
+
+    public function delete(int $id): bool
+    {
+        if (NULL == $this-&gt;connection) return false;
+        $sql = 'DELETE FROM product WHERE id = :id';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':id', $id);
+        $success = $stmt-&gt;execute();
+        return $success;
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>删除记录很简单。需要绑定参数（bindParam）来删除指定的记录</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function deleteAll(): void
+    {
+        $this-&gt;productRepository-&gt;deleteAll();
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+
+    public function delete(int $id): void
+    {
+        $this-&gt;productRepository-&gt;delete($id);
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div><div class="codebox"><div class="codefile">ProductRepository.php</div><pre><code>class ProductRepository
+{
+    // 删除所有记录，返回受影响的行数
+    public function deleteAll(): int
+    {
+        if (NULL == $this-&gt;connection) return 0;
+        $sql = 'DELETE FROM product';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;execute();
+        $numRowsAffected = $stmt-&gt;rowCount();
+        return $numRowsAffected;
+    }
+
+    // 删除指定 id 的记录，使用参数绑定
+    public function delete(int $id): bool
+    {
+        if (NULL == $this-&gt;connection) return false;
+        $sql = 'DELETE FROM product WHERE id = :id';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':id', $id);
+        $success = $stmt-&gt;execute();
+        return $success;
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-19" data-n="19">
+  <div class="page-head">
+    <div class="pageno">Page 19</div>
+    <div class="headtitles">
+      <div class="ht-en">Displaying a single record</div>
+      <div class="ht-zh">显示单条记录</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page19.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Displaying a single record is straightforward. It utilizes the ProductRepository's find() method that was used in the edit functionality</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'show':
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    if (empty($id)) {
+        $this-&gt;defaultController-&gt;error('error - An integer ID must be provided');
+    } else {
+        $this-&gt;productController-&gt;show($id);
+    }
+    break;</code></pre></div><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function show(int $id): void
+    {
+        $product = $this-&gt;productRepository-&gt;find($id);
+
+        if (empty($product)) {
+            $defaultController = new DefaultController();
+            $defaultController-&gt;error('error - No product found with ID = ' . $id);
+        } else {
+            $template = 'product/show.html.twig';
+            $args = [
+                'product' =&gt; $product
+            ];
+            print $this-&gt;twig-&gt;render($template, $args);
+        }
+    }
+}</code></pre></div><div class="note"><div>Product Details page — id: 1 / description: hammer / price: $ 9.99 / Back</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>显示单条记录非常简单。它使用了在编辑功能中用过的 ProductRepository 的 find() 方法</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'show':
+    // 从 GET 参数读取要显示的记录 id
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    if (empty($id)) {
+        $this-&gt;defaultController-&gt;error('error - An integer ID must be provided');
+    } else {
+        $this-&gt;productController-&gt;show($id);
+    }
+    break;</code></pre></div><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function show(int $id): void
+    {
+        // 复用 find() 方法取得单条记录
+        $product = $this-&gt;productRepository-&gt;find($id);
+
+        if (empty($product)) {
+            // 找不到记录时转到错误页面
+            $defaultController = new DefaultController();
+            $defaultController-&gt;error('error - No product found with ID = ' . $id);
+        } else {
+            $template = 'product/show.html.twig';
+            $args = [
+                'product' =&gt; $product
+            ];
+            print $this-&gt;twig-&gt;render($template, $args);
+        }
+    }
+}</code></pre></div><div class="note"><div>产品详情页面 — id: 1 / 描述: hammer / 价格: $ 9.99 / 返回</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-20" data-n="20">
+  <div class="page-head">
+    <div class="pageno">Page 20</div>
+    <div class="headtitles">
+      <div class="ht-en">CRUD with Validation and Auth</div>
+      <div class="ht-zh">带验证与认证的 CRUD</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page20.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><p class="section-only">—</p></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><p class="section-only">—</p></div>
+  </div>
+</section>
+
+<section class="page" id="page-21" data-n="21">
+  <div class="page-head">
+    <div class="pageno">Page 21</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation and Auth</div>
+      <div class="ht-zh">添加验证与认证</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page21.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Form Validation can be added to the class representing the entity</li><li>The method can be called from front controller</li><li>Related template may need to be updated</li><li>Adding authentication requires us to:</li></ul><ul class="bullets"><li>Add User class, its controller and repository</li><li>Add action handler in the front controller</li><li>Modify related templates</li></ul></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>表单验证可以添加到表示实体的类中</li><li>该方法可以从前端控制器调用</li><li>相关的模板可能需要更新</li><li>添加认证需要我们：</li></ul><ul class="bullets"><li>添加 User 类、对应的控制器和仓储</li><li>在前端控制器中添加 action 处理器</li><li>修改相关模板</li></ul></div>
+  </div>
+</section>
+
+<section class="page" id="page-22" data-n="22">
+  <div class="page-head">
+    <div class="pageno">Page 22</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation …</div>
+      <div class="ht-zh">添加验证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page22.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Validate method in the Product class</li></ul><div class="codebox"><div class="codefile">Product.php</div><pre><code>class Product
+{
+    public static function validate(): Array
+    {
+        $errors = [];
+
+        $description = filter_input(INPUT_POST, 'description');
+        if (empty($description)) {
+            $errors[] = 'Please enter description';
+        }
+
+        $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION);
+        if (empty($price)) {
+            $errors[] = 'Please enter the price';
+        }
+
+        return $errors;
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>Product 类中的 validate 方法</li></ul><div class="codebox"><div class="codefile">Product.php</div><pre><code>class Product
+{
+    // 静态方法：验证 POST 表单数据，返回错误消息数组
+    public static function validate(): Array
+    {
+        $errors = [];
+
+        $description = filter_input(INPUT_POST, 'description');
+        if (empty($description)) {
+            $errors[] = 'Please enter description';   // 请输入描述
+        }
+
+        $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION);
+        if (empty($price)) {
+            $errors[] = 'Please enter the price';     // 请输入价格
+        }
+
+        return $errors;   // 没有错误时返回空数组
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-23" data-n="23">
+  <div class="page-head">
+    <div class="pageno">Page 23</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation …</div>
+      <div class="ht-zh">添加验证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page23.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the front controller for create and processCreate action. Notice that we also need to modify the product controller</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'create':
+    $formData = [];
+    $this-&gt;productController-&gt;create($formData);
+    break;
+
+case 'processCreate':
+    $error = Product::validate();
+    $formData = [
+        'error' =&gt; $error,
+        // for the following, you can also instantiate a Product object
+        // But make sure to also edit the controller's method and the template
+        'description' =&gt; filter_input(INPUT_POST, 'description'),
+        'price' =&gt; filter_input(INPUT_POST, 'price',
+            FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)
+    ];
+
+    if ($isPostSubmission &amp;&amp; empty($error)) {
+        $this-&gt;productController-&gt;processCreate($formData);
+    } else {
+        $this-&gt;productController-&gt;create($formData);
+    }
+    break;</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改前端控制器中的 create 和 processCreate action。注意，我们还需要修改 product 控制器</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'create':
+    // 显示表单时传入空的表单数据
+    $formData = [];
+    $this-&gt;productController-&gt;create($formData);
+    break;
+
+case 'processCreate':
+    // 调用 Product 类的验证方法
+    $error = Product::validate();
+    $formData = [
+        'error' =&gt; $error,
+        // 以下内容也可以改为实例化一个 Product 对象
+        // 但要记得同时修改控制器方法和模板
+        'description' =&gt; filter_input(INPUT_POST, 'description'),
+        'price' =&gt; filter_input(INPUT_POST, 'price',
+            FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION)
+    ];
+
+    // 是 POST 提交且没有错误 → 处理创建
+    if ($isPostSubmission &amp;&amp; empty($error)) {
+        $this-&gt;productController-&gt;processCreate($formData);
+    } else {
+        // 否则重新显示表单（并带上错误信息与已填数据）
+        $this-&gt;productController-&gt;create($formData);
+    }
+    break;</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-24" data-n="24">
+  <div class="page-head">
+    <div class="pageno">Page 24</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation …</div>
+      <div class="ht-zh">添加验证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page24.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the product controller. Notice that we also need to modify the create template</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function create(Array $data): void
+    {
+        $template = 'product/create.html.twig';
+        $args = $data;
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+
+    public function processCreate(Array $data): void
+    {
+        $description = $data['description'];
+        $price = $data['price'];
+        $newObjectId = $this-&gt;productRepository-&gt;insert($description, $price);
+
+        $_SESSION['id'] = $newObjectId;
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改 product 控制器。注意，我们还需要修改 create 模板</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    // 现在接收包含错误信息和已填数据的数组
+    public function create(Array $data): void
+    {
+        $template = 'product/create.html.twig';
+        $args = $data;
+        print $this-&gt;twig-&gt;render($template, $args);
+    }
+
+    public function processCreate(Array $data): void
+    {
+        // 从数组中取出数据
+        $description = $data['description'];
+        $price = $data['price'];
+        $newObjectId = $this-&gt;productRepository-&gt;insert($description, $price);
+
+        $_SESSION['id'] = $newObjectId;
+
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-25" data-n="25">
+  <div class="page-head">
+    <div class="pageno">Page 25</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation …</div>
+      <div class="ht-zh">添加验证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page25.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the template</li></ul><div class="codebox"><div class="codefile">create.html.twig</div><pre><code>{% block body %}
+&lt;h1&gt;Create NEW Product page&lt;/h1&gt;
+{% if error is not empty %}
+&lt;div class="form-control is-invalid"&gt;
+&lt;ul&gt;
+{% for err in error %}
+&lt;li&gt;{{ err }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;br&gt;
+{% endif %}
+&lt;form method="POST" action="/?action=processCreate"&gt;
+&lt;p&gt;
+Description:
+&lt;input name="description" value={{ description }}&gt;
+&lt;/p&gt;
+&lt;p&gt;
+Price:
+&lt;input name="price" type="number" min="0" step="0.01"
+       value={{ price }}&gt;
+&lt;/p&gt;
+&lt;input type="submit" class="btn btn-primary"&gt;
+&lt;/form&gt;
+{% endblock %}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改模板</li></ul><div class="codebox"><div class="codefile">create.html.twig</div><pre><code>{% block body %}
+&lt;h1&gt;Create NEW Product 页面&lt;/h1&gt;
+{# 如果验证结果不为空，则显示错误列表 #}
+{% if error is not empty %}
+&lt;div class="form-control is-invalid"&gt;
+&lt;ul&gt;
+{% for err in error %}
+&lt;li&gt;{{ err }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;br&gt;
+{% endif %}
+&lt;form method="POST" action="/?action=processCreate"&gt;
+&lt;p&gt;
+描述:
+&lt;input name="description" value={{ description }}&gt;
+&lt;/p&gt;
+&lt;p&gt;
+价格:
+&lt;input name="price" type="number" min="0" step="0.01"
+       value={{ price }}&gt;
+&lt;/p&gt;
+&lt;input type="submit" class="btn btn-primary"&gt;
+&lt;/form&gt;
+{% endblock %}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-26" data-n="26">
+  <div class="page-head">
+    <div class="pageno">Page 26</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation …</div>
+      <div class="ht-zh">添加验证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page26.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the front controller for processEdit action. We also need to modify the product controller. Note that we will keep the error goes to the error page</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'processEdit':
+    $id = filter_input(INPUT_POST,
+        'id', FILTER_SANITIZE_NUMBER_INT);
+    $error = Product::validate();
+    $formData = [
+        'error' =&gt; $error,
+        // for the following, you can also instantiate a Product object
+        // But make sure to also edit the controller's method and the template
+        'id' =&gt; $id,
+        'description' =&gt; filter_input(INPUT_POST, 'description'),
+        'price' =&gt; filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION)
+    ];
+
+    if ($isPostSubmission &amp;&amp; !empty($id) &amp;&amp; empty($error)) {
+        $this-&gt;productController-&gt;processEdit($formData);
+    } else {
+        // we will keep the error goes to the default controller
+        $this-&gt;defaultController-&gt;error(
+            'error - Missing data (or not POST method) when trying to update product');
+    }
+    break;</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改前端控制器中的 processEdit action。我们还需要修改 product 控制器。注意，这里我们将让错误继续转到错误页面</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'processEdit':
+    $id = filter_input(INPUT_POST,
+        'id', FILTER_SANITIZE_NUMBER_INT);
+    // 同样调用 Product::validate() 进行验证
+    $error = Product::validate();
+    $formData = [
+        'error' =&gt; $error,
+        // 以下数据也可以改为实例化 Product 对象
+        'id' =&gt; $id,
+        'description' =&gt; filter_input(INPUT_POST, 'description'),
+        'price' =&gt; filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION)
+    ];
+
+    if ($isPostSubmission &amp;&amp; !empty($id) &amp;&amp; empty($error)) {
+        $this-&gt;productController-&gt;processEdit($formData);
+    } else {
+        // 与创建页面不同，这里仍将错误交给默认控制器（错误页面）处理
+        $this-&gt;defaultController-&gt;error(
+            'error - Missing data (or not POST method) when trying to update product');
+    }
+    break;</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-27" data-n="27">
+  <div class="page-head">
+    <div class="pageno">Page 27</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding validation …</div>
+      <div class="ht-zh">添加验证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page27.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the product controller</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    public function processEdit(Array $data): void
+    {
+        $id = $data['id'];
+        $description = $data['description'];
+        $price = $data['price'];
+        $this-&gt;productRepository-&gt;update($id, $description, $price);
+        // Store ID of product to highlight in the SESSION
+        $_SESSION['id'] = $id;
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改 product 控制器</li></ul><div class="codebox"><div class="codefile">ProductController.php</div><pre><code>class ProductController extends Controller
+{
+    // 现在接收数组参数
+    public function processEdit(Array $data): void
+    {
+        $id = $data['id'];
+        $description = $data['description'];
+        $price = $data['price'];
+        $this-&gt;productRepository-&gt;update($id, $description, $price);
+        // 将产品 id 存入 SESSION，用于高亮显示
+        $_SESSION['id'] = $id;
+        $location = '/?action=products';
+        header("Location: $location");
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-28" data-n="28">
+  <div class="page-head">
+    <div class="pageno">Page 28</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page28.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Add user table in the database. Note that the password was generated using password_hash('Admin$123',PASSWORD_DEFAULT)</li></ul><div class="codebox"><div class="codefile">modify_db_user.php</div><pre><code>&lt;?php
+define('DB_NAME', 'demo29');
+
+// ---- for Login
+// Make sure create_database.php run first
+$connection = new \PDO(
+    'mysql:dbname=' . DB_NAME . ';host=localhost:3306',
+    'root'
+);
+
+$sql = 'CREATE TABLE IF NOT EXISTS user ('
+    . 'id integer PRIMARY KEY AUTO_INCREMENT, '
+    . 'username text,' . 'password text'
+    . ')';
+$stmt4 = $connection-&gt;prepare($sql);
+$stmt4-&gt;execute();
+
+// note: the password is Admin$123
+$sql = 'INSERT INTO user (username, password) ';
+$sql .= 'VALUES ("admin","$2y$10$YwpAqmsPv3s7Ca8mTpcMd.sFq5Lu2kEv18D0HBBV5BfdB5n31x9z0")';
+$stmt5 = $connection-&gt;prepare($sql);
+$stmt5-&gt;execute();</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>在数据库中添加 user 表。注意，密码是使用 password_hash('Admin$123',PASSWORD_DEFAULT) 生成的</li></ul><div class="codebox"><div class="codefile">modify_db_user.php</div><pre><code>&lt;?php
+define('DB_NAME', 'demo29');
+
+// ---- 用于登录
+// 确保先运行 create_database.php
+$connection = new \PDO(
+    'mysql:dbname=' . DB_NAME . ';host=localhost:3306',
+    'root'
+);
+
+// 创建 user 表
+$sql = 'CREATE TABLE IF NOT EXISTS user ('
+    . 'id integer PRIMARY KEY AUTO_INCREMENT, '
+    . 'username text,' . 'password text'
+    . ')';
+$stmt4 = $connection-&gt;prepare($sql);
+$stmt4-&gt;execute();
+
+// 注意：明文密码是 Admin$123，这里存的是它的哈希值
+$sql = 'INSERT INTO user (username, password) ';
+$sql .= 'VALUES ("admin","$2y$10$YwpAqmsPv3s7Ca8mTpcMd.sFq5Lu2kEv18D0HBBV5BfdB5n31x9z0")';
+$stmt5 = $connection-&gt;prepare($sql);
+$stmt5-&gt;execute();</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-29" data-n="29">
+  <div class="page-head">
+    <div class="pageno">Page 29</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page29.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Create User class. We do not have any user registration. Hence, we only have getters. Notice the use of password_verify() function</li></ul><div class="codebox"><div class="codefile">User.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+class User
+{
+    private $id;
+    private $username;
+    private $password;
+
+    function getId(): int {
+        return $this-&gt;id;
+    }
+
+    function getUserName(): string {
+        return $this-&gt;username;
+    }
+
+    // Verify the password, pass in the hash for verification.
+    function verifyPassword(string $passwordToVerify) {
+        return password_verify($passwordToVerify, $this-&gt;password);
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>创建 User 类。我们没有任何用户注册功能，因此只有 getter 方法。注意 password_verify() 函数的使用</li></ul><div class="codebox"><div class="codefile">User.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+class User
+{
+    private $id;
+    private $username;
+    private $password;
+
+    // 因为没有注册功能，所以只有 getter
+    function getId(): int {
+        return $this-&gt;id;
+    }
+
+    function getUserName(): string {
+        return $this-&gt;username;
+    }
+
+    // 验证密码：传入用户输入的明文密码，与存储的哈希比较
+    function verifyPassword(string $passwordToVerify) {
+        return password_verify($passwordToVerify, $this-&gt;password);
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-30" data-n="30">
+  <div class="page-head">
+    <div class="pageno">Page 30</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page30.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Create UserController class. We just want to process the login</li></ul><div class="codebox"><div class="codefile">UserController.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+class UserController extends Controller
+{
+    private UserRepository $userRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this-&gt;userRepository = new UserRepository();
+    }
+
+    public function processLogin(Array $data): void
+    {
+        $username = $data['username'];
+        $password = $data['password'];
+        $user = $this-&gt;userRepository-&gt;find($data['username']);
+
+        if ($user &amp;&amp; $user-&gt;verifyPassword($data['password'])) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['username'] = $data['username'];
+            $location = '/?action=products';
+            header("Location: $location");
+        }
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>创建 UserController 类。我们只需要处理登录</li></ul><div class="codebox"><div class="codefile">UserController.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+class UserController extends Controller
+{
+    private UserRepository $userRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this-&gt;userRepository = new UserRepository();
+    }
+
+    public function processLogin(Array $data): void
+    {
+        $username = $data['username'];
+        $password = $data['password'];
+        // 根据用户名查找用户
+        $user = $this-&gt;userRepository-&gt;find($data['username']);
+
+        // 用户存在且密码验证通过
+        if ($user &amp;&amp; $user-&gt;verifyPassword($data['password'])) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            // 将用户名写入 session，表示已登录
+            $_SESSION['username'] = $data['username'];
+            $location = '/?action=products';
+            header("Location: $location");
+        }
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-31" data-n="31">
+  <div class="page-head">
+    <div class="pageno">Page 31</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page31.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Create UserRepository class. We just need to query one login user</li></ul><div class="codebox"><div class="codefile">UserRepository.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+class UserRepository
+{
+    private ?\PDO $connection = NULL;
+
+    public function __construct()
+    {
+        $db = new Database();
+        $this-&gt;connection = $db-&gt;getConnection();
+    }
+
+    public function find(string $username): ?User
+    {
+        if (NULL == $this-&gt;connection) return NULL;
+        $sql = 'SELECT * FROM user WHERE username = :user';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':user', $username);
+        $stmt-&gt;execute();
+        $stmt-&gt;setFetchMode(\PDO::FETCH_CLASS, User::class);
+        $user = $stmt-&gt;fetch();
+        if ($user == false) {
+            return NULL;
+        }
+        return $user;
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>创建 UserRepository 类。我们只需要查询一个登录用户</li></ul><div class="codebox"><div class="codefile">UserRepository.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+class UserRepository
+{
+    private ?\PDO $connection = NULL;
+
+    public function __construct()
+    {
+        $db = new Database();
+        $this-&gt;connection = $db-&gt;getConnection();
+    }
+
+    public function find(string $username): ?User
+    {
+        if (NULL == $this-&gt;connection) return NULL;
+        // 用命名占位符根据用户名查询
+        $sql = 'SELECT * FROM user WHERE username = :user';
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':user', $username);
+        $stmt-&gt;execute();
+        // 将结果映射为 User 对象
+        $stmt-&gt;setFetchMode(\PDO::FETCH_CLASS, User::class);
+        $user = $stmt-&gt;fetch();
+        if ($user == false) {
+            return NULL;   // 找不到该用户
+        }
+        return $user;
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-32" data-n="32">
+  <div class="page-head">
+    <div class="pageno">Page 32</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page32.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the Controller SuperClass to add global variable $_SESSION as a global variable for twig</li></ul><div class="codebox"><div class="codefile">Controller.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
+abstract class Controller
+{
+    const PATH_TO_TEMPLATES = __DIR__ . '/../templates';
+
+    protected Environment $twig;
+
+    public function __construct()
+    {
+        $loader = new FilesystemLoader(self::PATH_TO_TEMPLATES);
+        $this-&gt;twig = new Environment($loader);
+        $this-&gt;twig-&gt;addGlobal('session', $_SESSION);
+    }
+}</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改 Controller 父类，将全局变量 $_SESSION 添加为 twig 的全局变量</li></ul><div class="codebox"><div class="codefile">Controller.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
+abstract class Controller
+{
+    const PATH_TO_TEMPLATES = __DIR__ . '/../templates';
+
+    protected Environment $twig;
+
+    public function __construct()
+    {
+        $loader = new FilesystemLoader(self::PATH_TO_TEMPLATES);
+        $this-&gt;twig = new Environment($loader);
+        // 将 $_SESSION 作为全局变量注入 Twig 模板，
+        // 模板中即可用 session.username 判断登录状态
+        $this-&gt;twig-&gt;addGlobal('session', $_SESSION);
+    }
+}</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-33" data-n="33">
+  <div class="page-head">
+    <div class="pageno">Page 33</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page33.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the Controller SuperClass to add global variable $_SESSION as a global variable for twig</li></ul><div class="codebox"><div class="codefile">Controller.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
+abstract class Controller
+{
+    const PATH_TO_TEMPLATES = __DIR__ . '/../templates';
+
+    protected Environment $twig;
+
+    public function __construct()
+    {
+        $loader = new FilesystemLoader(self::PATH_TO_TEMPLATES);
+        $this-&gt;twig = new Environment($loader);
+        $this-&gt;twig-&gt;addGlobal('session', $_SESSION);
+    }
+}</code></pre></div><div class="note"><div>(Same slide as previous page in the original lecture material)</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改 Controller 父类，将全局变量 $_SESSION 添加为 twig 的全局变量</li></ul><div class="codebox"><div class="codefile">Controller.php</div><pre><code>&lt;?php
+namespace Mattsmithdev;
+
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
+abstract class Controller
+{
+    const PATH_TO_TEMPLATES = __DIR__ . '/../templates';
+
+    protected Environment $twig;
+
+    public function __construct()
+    {
+        $loader = new FilesystemLoader(self::PATH_TO_TEMPLATES);
+        $this-&gt;twig = new Environment($loader);
+        // 将 $_SESSION 作为全局变量注入 Twig 模板，
+        // 模板中即可用 session.username 判断登录状态
+        $this-&gt;twig-&gt;addGlobal('session', $_SESSION);
+    }
+}</code></pre></div><div class="note"><div>（与原课件上一页内容相同）</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-34" data-n="34">
+  <div class="page-head">
+    <div class="pageno">Page 34</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page34.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the Application front controller to have login and logout action</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'login':
+    $formData = [
+        'username' =&gt; filter_input(INPUT_POST, 'username'),
+        'password' =&gt; filter_input(INPUT_POST, 'password')
+    ];
+    if ($isPostSubmission &amp;&amp; $formData['username']) {
+        $this-&gt;userController-&gt;processLogin($formData);
+    } else {
+        $this-&gt;defaultController-&gt;homepage('Wrong username or password');
+    }
+    break;
+
+case 'logout':
+    unset($_SESSION['username']);
+    session_destroy();
+    $location = '/';
+    header("Location: $location");
+    break;</code></pre></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改 Application 前端控制器，添加 login 和 logout action</li></ul><div class="codebox"><div class="codefile">Application.php</div><pre><code>case 'login':
+    // 从登录表单读取数据
+    $formData = [
+        'username' =&gt; filter_input(INPUT_POST, 'username'),
+        'password' =&gt; filter_input(INPUT_POST, 'password')
+    ];
+    if ($isPostSubmission &amp;&amp; $formData['username']) {
+        $this-&gt;userController-&gt;processLogin($formData);
+    } else {
+        // 登录失败，返回首页并显示错误消息
+        $this-&gt;defaultController-&gt;homepage('Wrong username or password');
+    }
+    break;
+
+case 'logout':
+    // 清除用户名并销毁会话
+    unset($_SESSION['username']);
+    session_destroy();
+    $location = '/';
+    header("Location: $location");
+    break;</code></pre></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-35" data-n="35">
+  <div class="page-head">
+    <div class="pageno">Page 35</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page35.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><ul class="bullets"><li>Modify the homepage to have the login form</li><li>Modify the tab menu to protect secured pages</li><li>Modify the tab menu to have logout link</li><li>Modify the default controller to accept error message</li><li>Modify the front controller action to be protected by valid session</li></ul><div class="note"><div>Home page — Username / Password / Log in</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><ul class="bullets"><li>修改主页，加入登录表单</li><li>修改标签菜单，保护需要登录才能访问的页面</li><li>修改标签菜单，加入退出登录（Logout）链接</li><li>修改默认控制器，使其能够接收错误消息</li><li>修改前端控制器的 action，使其受有效 session 的保护</li></ul><div class="note"><div>首页 — 用户名 / 密码 / 登录</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-36" data-n="36">
+  <div class="page-head">
+    <div class="pageno">Page 36</div>
+    <div class="headtitles">
+      <div class="ht-en">Adding auth …</div>
+      <div class="ht-zh">添加认证……</div>
+    </div>
+    <button class="shot-btn" type="button" data-img="pages/page36.jpg" aria-label="View original slide">原图</button>
+  </div>
+  <div class="columns">
+    <div class="col col-en"><div class="col-label">English original</div><div class="note"><div>Product List page — ID / Description / Price / admin Logout / Show / Edit / Delete / Delete ALL products / Create NEW product</div><div>Pages are protected by a valid session (login required).</div></div></div>
+    <div class="col col-zh"><div class="col-label">中文翻译</div><div class="note"><div>产品列表页面 — ID / 描述 / 价格 / admin 登录名与 Logout 链接 / 显示 / 编辑 / 删除 / 删除所有产品 / 创建新产品的按钮</div><div>页面受到有效 session 的保护（需要登录才能访问）。</div></div></div>
+  </div>
+</section>
+    <div class="footer">CSIS 3280 Lecture 9 — CRUD (Chapter 29) · 中英对照教材 · © Copyright Bambang, and others. NOT FOR DISTRIBUTION</div>
+  </main>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="close" type="button" aria-label="Close">&times;</button>
+  <img id="lbimg" src="" alt="original slide">
+  <div class="cap">原始课件页面 · 点击任意处或按 Esc 关闭</div>
+</div>
+
+<script>
+(function(){
+  // mode toggle
+  document.querySelectorAll('.mode').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.mode').forEach(function(x){x.classList.remove('active')});
+      b.classList.add('active');
+      document.body.classList.remove('en-only','zh-only');
+      if(b.dataset.mode !== 'both') document.body.classList.add(b.dataset.mode);
+    });
+  });
+
+  // lightbox
+  var lb = document.getElementById('lightbox'), lbimg = document.getElementById('lbimg');
+  document.querySelectorAll('.shot-btn').forEach(function(b){
+    b.addEventListener('click', function(){ lbimg.src = b.dataset.img; lb.classList.add('show'); });
+  });
+  function closeLb(){ lb.classList.remove('show'); lbimg.src=''; }
+  lb.addEventListener('click', closeLb);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLb(); });
+
+  // scrollspy
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var links = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+  var ticking = false;
+  function update(){
+    var y = window.scrollY + 130, cur = pages[0];
+    for (var i=0;i<pages.length;i++){
+      if (pages[i].offsetTop <= y) cur = pages[i]; else break;
+    }
+    links.forEach(function(a){
+      var on = cur && +a.dataset.n === +cur.dataset.n;
+      a.classList.toggle('active', on);
+      if(on){
+        var sb = document.querySelector('.sidebar');
+        var r = a.getBoundingClientRect(), s = sb.getBoundingClientRect();
+        if(r.top < s.top+10 || r.bottom > s.bottom-10) a.scrollIntoView({block:'center'});
+      }
+    });
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>

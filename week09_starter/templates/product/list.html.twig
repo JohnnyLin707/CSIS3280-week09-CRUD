@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product List page{% endblock %}
+
+{% block productLink %}active{% endblock %}
+
+{% block body %}
+    <h1>Product List page</h1>
+
+    <table class="table table-sm">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col" class="table-dark">ID</th>
+        <th scope="col" class="table-dark">Description</th>
+        <th scope="col" class="table-dark">Price</th>
+        <th scope="col" class="table-dark">Detail</th>
+        <th scope="col" class="table-dark">Edit</th>
+        <th scope="col" class="table-dark">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+
+            {% if id == product.id %}
+                {% set highlight = 'active' %}
+            {% else %}
+                {% set highlight = '' %}
+            {% endif %}
+
+            <tr class="{{ highlight }}">
+                <td>{{ product.id }}</td>
+                
+                <td>{{  product.description }}</td>
+                <td>
+                $ {{ product.price | number_format(2) }}
+                </td>
+                <td>
+                <a href="/?action=show&id={{ product.id }}" class="btn btn-primary m-1">Show</a>
+                </td>
+                <td>
+                <a href="/?action=edit&id={{ product.id }}"
+                   class="btn btn-warning m-1">Edit</a>
+                </td>
+                <td>
+                <form method="POST" action="/?action=delete">
+                    <input type="hidden" name="id" value="{{ product.id }}">
+                    <button class="btn btn-danger m-1" 
+                    onclick="return confirm('Delete product with ID = {{ product.id }}: Are you sure?');">
+                        Delete</button>
+                </form>
+                </td>
+            </tr>
+        </tbody>
+        {% else %}
+            <tr>
+            <td colspan=6>
+                (there are no products to display)
+            </td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+    <p>
+    <form method="POST" action="/?action=deleteAll">
+        <button class="btn btn-danger m-1" onclick="return confirm('Delete ALL products: Are you sure?');">
+            Delete ALL products</button>
+    </form>
+    </p>
+
+    <p>
+        <a href="/?action=create" class="btn btn-success m-1">
+            Create NEW product
+        </a>
+    </p>
+
+
+{% endblock %}
