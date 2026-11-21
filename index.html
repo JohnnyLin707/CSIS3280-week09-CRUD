@@ -170,7 +170,91 @@ body.zh-only .col-zh{border-left:none}
   .col-en{border-right:none; border-bottom:1px solid var(--line)}
   .subtitle{display:none}
 }
+
+/* ===== Starter → Demo 横向对比 ===== */
+.jump{
+  font-size:13px; font-weight:700; color:var(--accent);
+  border-bottom:2px solid var(--accent); padding-bottom:2px; white-space:nowrap;
+}
+.jump:hover{color:#1d4ed8}
+.compare-root{padding:26px 26px 6px}
+.compare-hero{background:linear-gradient(135deg,#0f766e,#1d4ed8)}
+.cmp-note{
+  background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b;
+  border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:13.5px; color:#78350f;
+}
+.cmp-note b{color:#92400e}
+.timeline{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:10px; list-style:none; padding:0; margin:0 0 18px;
+}
+.timeline li{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:11px 13px; font-size:12.5px; line-height:1.55;
+}
+.timeline li b{display:block; color:var(--accent2); font-size:13px; margin-bottom:3px}
+.timeline li span{color:var(--muted)}
+.cmp-legend{
+  display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--muted);
+  margin:0 0 14px; padding:0 4px;
+}
+.cmp-legend i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px; vertical-align:-1px}
+.cmp-legend .l-start{background:#e5e7eb}
+.cmp-legend .l-demo{background:#fde68a}
+.cmp-legend .l-why{background:#bfdbfe}
+.cmp-card{
+  background:var(--paper); border:1px solid var(--line); border-radius:12px;
+  margin-bottom:18px; overflow:hidden; box-shadow:0 1px 3px rgba(16,24,40,.04);
+  scroll-margin-top:72px;
+}
+.cmp-head{
+  display:flex; align-items:center; gap:12px; padding:11px 16px;
+  background:#fafbfc; border-bottom:1px solid var(--line); flex-wrap:wrap;
+}
+.cmp-head .file{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:13px; font-weight:700; color:#1f2937;
+}
+.cmp-head .role{font-size:12px; color:var(--muted)}
+.cmp-head .badge{
+  margin-left:auto; font-size:11px; font-weight:700; letter-spacing:.4px;
+  border-radius:20px; padding:3px 9px; background:#eff6ff; color:var(--accent);
+}
+.cmp-head .badge.new{background:#ecfdf5; color:#047857}
+.cmp-head .badge.same{background:#f3f4f6; color:#6b7280}
+.cmp-grid{display:grid; grid-template-columns:1fr 1fr 1fr}
+.cmp-col{padding:14px 16px 18px; min-width:0; border-top:1px solid var(--line)}
+.cmp-col.starter{background:#fbfcfe; border-right:1px solid var(--line)}
+.cmp-col.demo{background:#fffdf8; border-right:1px solid var(--line)}
+.cmp-col.why{background:#f8fbff}
+.cmp-col h4{font-size:12px; margin:0 0 4px; letter-spacing:.5px}
+.cmp-col.starter h4{color:#6b7280}
+.cmp-col.demo h4{color:#b45309}
+.cmp-col.why h4{color:var(--accent)}
+.cmp-col .codebox{margin-top:8px}
+.cmp-col.why ul{margin:6px 0 0; padding-left:18px}
+.cmp-col.why li{margin-bottom:8px; font-size:13px; line-height:1.6}
+.cmp-col.why code{
+  background:#eef2ff; color:#3730a3; border-radius:4px; padding:1px 5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+}
+.cmp-empty{
+  font-size:13px; color:#9ca3af; font-style:italic; background:#fff;
+  border:1px dashed var(--line); border-radius:8px; padding:12px 14px; margin-top:8px;
+}
+.cmp-file-list{columns:2; column-gap:28px; margin:6px 0 0; padding-left:20px; font-size:13px}
+.cmp-file-list li{margin-bottom:6px; break-inside:avoid}
+.cmp-file-list code{
+  background:#f3f4f6; border-radius:4px; padding:1px 5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+}
+@media (max-width:1200px){
+  .cmp-grid{grid-template-columns:1fr}
+  .cmp-col{border-right:none!important; border-bottom:1px solid var(--line)}
+}
 @media print{
+  .compare-root{padding:0}
+  .cmp-card{break-inside:avoid; box-shadow:none}
   .topbar,.sidebar,.shot-btn,.lightbox{display:none!important}
   body{background:#fff; font-size:11px}
   main{padding:0}
@@ -186,6 +270,7 @@ body.zh-only .col-zh{border-left:none}
   <div class="brand">CSIS 3280 · <span>Lecture 9</span></div>
   <div class="subtitle">CRUD (CH 29) — 中英对照教材 · 36 页</div>
   <div class="spacer"></div>
+  <a class="jump" href="#compare-root">Starter → Demo 对比</a>
   <div class="controls">
     <button type="button" class="mode active" data-mode="both">双语</button>
     <button type="button" class="mode" data-mode="en-only">仅英文</button>
@@ -240,6 +325,866 @@ body.zh-only .col-zh{border-left:none}
       <h1>CRUD (CH 29)</h1>
       <p>英文原文在左，中文翻译在右 · 点击每页右上角“原图”查看课件截图</p>
     </div>
+
+<section id="compare-root" class="compare-root">
+  <div class="section-intro compare-hero">
+    <h1>week09_starter → week09_demo 代码横向对比</h1>
+    <p>左：starter 留下的空壳 · 中：demo 里老师真正写进去的代码 · 右：中文注释解释“为什么加这行 / 这行干什么”</p>
+  </div>
+
+  <div class="cmp-note">
+    <b>阅读结论先放这里：</b>老师不是一次性写完整个项目，而是按“一个 action 一条线”推进：
+    <b>Read（starter 已给）→ Create → Edit 的显示表单阶段 → Delete → 表单验证 → 登录认证</b>。
+    实际仓库里的 <code>week09_demo</code> 是一张<strong>中途快照</strong>：<code>processEdit</code>、<code>update</code>、<code>deleteAll</code>、<code>show</code> 仍是空方法；
+    <code>login</code> 分支调用了没有实例化的 <code>$userController</code>；<code>logout</code> 的 <code>header("Locatin: ...")</code> 拼错；
+    <code>Product::validate()</code> 加了但前端控制器还没调用它。课件后半部分（本页下方 Page 22–36）才把这些补齐。
+    下面 demo 栏里的中文 <code>//</code> 和 <code>{# #}</code> 是为了讲解补写的注释，原始 demo 文件中没有。
+  </div>
+
+  <ol class="timeline">
+    <li><b>0 · 起点</b><span>starter 只有 products 列表能跑；实体、模板、仓储的 find()/findAll() 已备好，其余方法全是空壳。</span></li>
+    <li><b>1 · 补 Create</b><span>Application 的 processCreate 收 POST 数据 → ProductController 调 insert() → session 存新 id → 重定向回列表高亮。</span></li>
+    <li><b>2 · 补 Edit 前半段</b><span>edit 分支从 GET 拿 id，复用现成的 find()，把记录填进 edit 模板；processEdit 暂时留空。</span></li>
+    <li><b>3 · 补 Delete</b><span>列表模板早有确认弹窗和隐藏 id；Application 只接 POST id，控制器调仓储 delete() 再重定向。</span></li>
+    <li><b>4 · 加验证</b><span>在 Product 实体里加 static validate()，create 模板加错误列表和 value 回填；demo 尚未完全接线。</span></li>
+    <li><b>5 · 加认证</b><span>新建 user 表与 User / UserRepository / UserController；Controller 把 session 注入 Twig；base、home 加导航与登录表单。</span></li>
+    <li><b>6 · demo 停在这里</b><span>processEdit / update / deleteAll / show 未写；后端的 session 保护也只是“预留变量”，还没真正拦请求。</span></li>
+  </ol>
+
+  <div class="cmp-legend">
+    <span><i class="l-start"></i>starter 原始代码</span>
+    <span><i class="l-demo"></i>demo 改动后代码（含讲解注释）</span>
+    <span><i class="l-why"></i>为什么要加 / 功能是什么</span>
+    <span>表格在窄屏会自动上下堆叠，方便手机阅读。</span>
+  </div>
+
+  <article class="cmp-card" id="cmp-application">
+    <header class="cmp-head">
+      <span class="file">src/Application.php</span>
+      <span class="role">前端控制器：决定每个 action 调哪个控制器方法</span>
+      <span class="badge">改动最大</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">src/Application.php（节选）</div><pre><code>&lt;?php
+
+namespace CSIS3280;
+
+class Application
+{
+    private DefaultController $defaultController;
+    private ProductController $productController;
+
+    public function __construct()
+    {
+        $this-&gt;defaultController = new DefaultController();
+        $this-&gt;productController = new ProductController();
+    }
+
+    public function run(): void
+    {
+        $action = filter_input(INPUT_GET, 'action');
+        $isPostSubmission = ($_SERVER['REQUEST_METHOD'] === 'POST');
+
+        switch ($action)
+        {
+            case 'create':
+                // 空壳：等着往里写
+                break;
+            case 'processCreate':
+                // 空壳
+                break;
+            case 'edit':
+                // 空壳
+                break;
+            case 'processEdit':
+                // 空壳
+                break;
+            case 'products':
+                $this-&gt;productController-&gt;list();   // 唯一已实现的分支
+                break;
+            case 'delete':
+                break;
+            case 'deleteAll':
+                break;
+            case 'show':
+                break;
+            default:
+                $this-&gt;defaultController-&gt;homepage();
+        }
+    }
+}</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">src/Application.php（节选）</div><pre><code>&lt;?php
+
+namespace CSIS3280;
+
+class Application
+{
+    private DefaultController $defaultController;
+    private ProductController $productController;
+    // 注意：demo 没有声明 $userController，但下面 login 分支却用它
+
+    public function __construct()
+    {
+        $this-&gt;defaultController = new DefaultController();
+        $this-&gt;productController = new ProductController();
+        // 老师没有在这里 new UserController()，属于待补的 bug
+    }
+
+    public function run(): void
+    {
+        $action = filter_input(INPUT_GET, 'action');
+        $isPostSubmission = ($_SERVER['REQUEST_METHOD'] === 'POST');
+        $username = $_SESSION['username'] ?? '';   // 为登录/权限判断预留，当前 demo 未使用
+
+        switch ($action)
+        {
+            // ===== 新增：认证相关 =====
+            case 'login':
+                $formData = [
+                    'username' =&gt; filter_input(INPUT_POST,'username'),
+                    'password' =&gt; filter_input(INPUT_POST,'password'),
+                ];
+                if($isPostSubmission &amp;&amp; $formData['username']){
+                    $this-&gt;userController-&gt;processLogin($formData);   // 交给 UserController 校验
+                }
+                else{
+                    $this-&gt;defaultController-&gt;homepage('wrong username or password');
+                }
+                break;
+
+            case 'logout':
+                unset($_SESSION['username']);       // 只清掉登录标记
+                session_destroy();                  // 销毁整个会话
+                $location ="/";
+                header("Locatin: $location");       // 注意：原文拼成 Locatin，正确应为 Location
+                break;
+
+            // ===== 原来的空壳，现在补上 =====
+            case 'create':
+                $this-&gt;productController-&gt;create();   // 显示新建表单
+                break;
+
+            case 'processCreate':
+                $description = filter_input(INPUT_POST,'description');
+                $price = filter_input(INPUT_POST,'price',FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                if($isPostSubmission &amp;&amp; !empty($description) &amp;&amp; !empty($price)){
+                    $this-&gt;productController-&gt;processCreate($description,$price);
+                }
+                else{
+                    $this-&gt;defaultController-&gt;error("Please enter your valid data");
+                }
+                break;
+
+            case 'edit':
+                $id = filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
+                if(!empty($id)){
+                    $this-&gt;productController-&gt;edit($id);   // 第一阶段：加载记录到表单
+                }
+                else{
+                    $this-&gt;defaultController-&gt;error("You need the id");
+                }
+                break;
+
+            case 'processEdit':
+                // 仍然是空的（课件后面才补）
+                break;
+
+            case 'products':
+                $this-&gt;productController-&gt;list();   // starter 已有，保持不变
+                break;
+
+            case 'delete':
+                $id = filter_input(INPUT_POST,'id',FILTER_SANITIZE_NUMBER_INT);
+                if($isPostSubmission &amp;&amp; !empty($id)){
+                    $this-&gt;productController-&gt;delete($id);
+                }
+                else{
+                    $this-&gt;defaultController-&gt;error("Please provide the id");
+                }
+                break;
+
+            case 'deleteAll':
+                break;   // 仍为空
+
+            case 'show':
+                break;   // 仍为空
+
+            default:
+                $this-&gt;defaultController-&gt;homepage('');   // 参数从无到有
+        }
+    }
+}</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li><code>create</code> / <code>edit</code> / <code>delete</code> 从“空 break”变成“调用控制器”：starter 已经把方法签名和 case 留好，老师按 <b>一个 action 一条线</b> 逐个填，不一次性重构全项目。</li>
+          <li><code>filter_input()</code> 而不是直接读 <code>$_POST</code>：课件明确要求；它顺便过滤输入，<code>FILTER_SANITIZE_NUMBER_INT</code> 保证 id 是整数，<code>FILTER_FLAG_ALLOW_FRACTION</code> 让价格保留小数。</li>
+          <li><code>$isPostSubmission</code>：同一个 action 既负责“显示表单”也负责“处理提交”，用请求方法分流；破坏性操作（delete）必须是 POST。</li>
+          <li><code>processCreate</code> 成功后才调控制器；否则走 <code>error()</code> 页，避免空数据入库。</li>
+          <li><code>$username = $_SESSION['username'] ?? ''</code> 是为登录后做权限判断预留的；但 demo 里后面没用它，所以<b>菜单隐藏了，后端 action 其实还没被真正保护</b>。</li>
+          <li><code>homepage('')</code> 是因为 <code>DefaultController::homepage()</code> 改成必须收一个错误参数；不传参数会报错。</li>
+          <li><b>demo 的待修点：</b>① login 里 <code>$this-&gt;userController</code> 没有在构造函数里实例化；② <code>Locatin</code> 是 <code>Location</code> 的拼写错误；③ <code>Product::validate()</code> 已定义却没在这里调用；④ <code>processEdit</code> / <code>deleteAll</code> / <code>show</code> 仍为空。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-controller">
+    <header class="cmp-head">
+      <span class="file">src/Controller.php</span>
+      <span class="role">所有控制器的父类：负责准备 Twig 环境</span>
+      <span class="badge">加 1 行</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">Controller.php</div><pre><code>    public function __construct()
+    {
+        $loader = new FilesystemLoader(self::PATH_TO_TEMPLATES);
+        $this-&gt;twig = new Environment($loader);
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">Controller.php</div><pre><code>    public function __construct()
+    {
+        $loader = new FilesystemLoader(self::PATH_TO_TEMPLATES);
+        $this-&gt;twig = new Environment($loader);
+        $this-&gt;twig-&gt;addGlobal('session',$_SESSION);   // 把会话注入所有模板
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>加了认证后，<code>base.html.twig</code> 和 <code>home.html.twig</code> 都要读 <code>session.username</code>。与其在每个控制器 render 时手动传，不如在父类里 <code>addGlobal()</code> 一次，所有子模板都能用。</li>
+          <li>能直接读 <code>$_SESSION</code> 是因为 <code>public/index.php</code> 一开始就 <code>session_start()</code>；这个文件 starter 和 demo 完全相同，无需改动。</li>
+          <li>副作用：<code>Controller</code> 的构造函数被所有子类调用，所以 ProductController / DefaultController / UserController 都自动获得这个全局变量。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-default">
+    <header class="cmp-head">
+      <span class="file">src/DefaultController.php</span>
+      <span class="role">首页与错误页</span>
+      <span class="badge">小改</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">DefaultController.php</div><pre><code>    public function homepage(): void
+    {
+        $template = 'home.html.twig';
+        $args = [];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">DefaultController.php</div><pre><code>    public function homepage($error): void
+    {
+        $template = 'home.html.twig';
+        $args = [
+            'error' =&gt; $error   // 登录失败时把错误带到首页显示
+        ];
+        print $this-&gt;twig-&gt;render($template, $args);
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>登录失败时 Application 调用 <code>homepage('wrong username or password')</code>；首页模板新增了错误区块，所以控制器必须把 <code>error</code> 传进去。</li>
+          <li>正常访问首页时 Application 传空字符串 <code>''</code>，模板里 <code>error is not empty</code> 为假，就不显示错误条。</li>
+          <li><code>error()</code> 方法没变：它仍负责渲染独立的错误页，用于“id 缺失 / 数据不合法”这类直接中断的流程。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-product">
+    <header class="cmp-head">
+      <span class="file">src/Product.php</span>
+      <span class="role">产品实体：从“纯数据袋”变成“自带验证规则”</span>
+      <span class="badge">加 validate()</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">Product.php（结尾）</div><pre><code>    public function setPrice(float $price): void
+    {
+        $this-&gt;price = $price;
+    }
+}   // 类到这里就结束了，没有验证逻辑</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">Product.php（新增部分）</div><pre><code>    public static function validate(): Array
+    {
+        $errors = [];   // 收集所有错误，而不是一错就中断
+
+        $description = filter_input(INPUT_POST, 'description');
+        if(empty($description)){
+            $errors[] = 'Please enter description';   // 描述必填
+        }
+        $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT,
+        FILTER_FLAG_ALLOW_FRACTION);
+        if(empty($price)){
+            $errors[] = 'Please enter the price';     // 价格必填
+        }
+
+        return $errors;   // 空数组 = 验证通过
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>课件第 21 页说“Form Validation can be added to the class representing the entity”：把规则放在实体里，create 和 processEdit 两条线都能复用同一份检查。</li>
+          <li><code>static</code> 让它不需要先 new 一个 Product 就能调用：<code>Product::validate()</code>。</li>
+          <li>返回数组而不是直接打印错误，是为了让模板 <code>{% for err in error %}</code> 逐条显示，也方便将来加更多字段规则。</li>
+          <li><b>注意：</b>demo 里这个方法没有被 Application 调用；前端控制器仍用 <code>!empty($description) &amp;&amp; !empty($price)</code> 的老写法。课件后续页才把它接进 create / processCreate。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-product-controller">
+    <header class="cmp-head">
+      <span class="file">src/ProductController.php</span>
+      <span class="role">动作控制器：取数据、选模板、跳转；不写 SQL</span>
+      <span class="badge">补 4 个方法</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">ProductController.php（节选）</div><pre><code>    public function create(): void
+    {
+        // 空
+    }
+
+    public function processCreate(string $description, float $price): void
+    {
+        // 空
+    }
+
+    public function list(): void
+    {
+        // 已实现：findAll() + render list 模板
+    }
+
+    public function edit(int $id): void          { /* 空 */ }
+    public function processEdit(...): void       { /* 空 */ }
+    public function delete(int $id): void        { /* 空 */ }
+    public function deleteAll(): void            { /* 空 */ }
+    public function show(int $id): void          { /* 空 */ }</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">ProductController.php（节选）</div><pre><code>    public function create(): void
+    {
+        $template = 'product/create.html.twig';
+        $args = [];
+        print $this-&gt;twig-&gt;render($template, $args);   // 只负责显示表单
+    }
+
+    public function processCreate(string $description, float $price): void
+    {
+        $newId = $this-&gt;productRepository-&gt;insert($description,$price);   // 数据落到仓储层
+        $_SESSION['id'] = $newId;   // 记下新 id，列表页用它高亮刚插入的行
+        $location = '/?action=products';
+        header("Location: $location");   // PRG：重定向，防止刷新重复提交
+    }
+
+    // list() 与 getIdFromSession() 完全沿用 starter
+
+    public function edit(int $id): void
+    {
+        $product = $this-&gt;productRepository-&gt;find($id);   // 复用已有的 find()
+        $template = 'product/edit.html.twig';
+        $args = ['product' =&gt; $product];
+        print $this-&gt;twig-&gt;render($template,$args);
+    }
+
+    public function delete(int $id): void
+    {
+        $this-&gt;productRepository-&gt;delete($id);
+        $location = '/?action=products';
+        header("Location: $location");   // 删完回到列表
+    }
+
+    // processEdit / deleteAll / show 仍是空壳</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>老师严格分层：控制器<b>不写 SQL</b>，只做“调用 Repository → 选 Twig 模板 → header 跳转”。SQL 全在 ProductRepository。</li>
+          <li><code>$_SESSION['id'] = $newId</code> 对应 <code>list.html.twig</code> 里的 <code>{% if id == product.id %}</code>，让新增记录短暂高亮；<code>getIdFromSession()</code> 取完就 <code>unset</code>，所以刷新列表后高亮消失。</li>
+          <li><code>header("Location: ...")</code> 是 Post/Redirect/Get 模式：用户刷新列表页时不会再次执行 INSERT 或 DELETE。</li>
+          <li><code>edit()</code> 是更新的<b>第一阶段</b>：只把一条记录填进只读 id 的表单；真正的 UPDATE（<code>processEdit</code>）demo 里还没写。</li>
+          <li>列表模板里的红色确认弹窗 <code>onclick="return confirm(...)"</code> starter 就已经有，所以后端只需接住 POST 的隐藏 id。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-product-repository">
+    <header class="cmp-head">
+      <span class="file">src/ProductRepository.php</span>
+      <span class="role">数据访问层：真正执行 SQL 的地方</span>
+      <span class="badge">补 insert / delete</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">ProductRepository.php（节选）</div><pre><code>    public function insert(string $description, float $price): int
+    {
+        // 空
+    }
+
+    public function findAll(): array   { /* 已实现 */ }
+    public function find(int $id): ?Product { /* 已实现 */ }
+
+    public function update(...): bool  { /* 空 */ }
+    public function delete(int $id): bool { /* 空 */ }
+    public function deleteAll(): int   { /* 空 */ }</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">ProductRepository.php（新增部分）</div><pre><code>    public function insert(string $description, float $price): int
+    {
+        if (NULL == $this-&gt;connection) return -1;   // 连接失败给错误码
+
+        $sql  = 'INSERT INTO product (description, price) ';
+        $sql .= 'VALUES (:desc, :price)';             // 命名占位符，防 SQL 注入
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':desc',$description);
+        $stmt-&gt;bindParam(':price',$price);
+
+        $status = $stmt-&gt;execute();
+        if($status){
+            return $this-&gt;connection-&gt;lastInsertId();   // 自增 id 交回上层做高亮
+        }
+        else{
+            return -1;
+        }
+    }
+
+    public function delete(int $id): bool
+    {
+        if (NULL == $this-&gt;connection) return -1;   // 注意：声明 bool 却返回 -1
+        $sql = "DELETE from product WHERE id=:id";   // WHERE 限定只删一条
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':id',$id);
+        $result = $stmt-&gt;execute();
+        return $result;
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li><code>prepare → bindParam → execute</code> 是课件强调的标准三步；用户输入的描述和价格不拼进 SQL 字符串，避免 SQL 注入。</li>
+          <li><code>lastInsertId()</code> 只在 INSERT 成功后有意义；把它返回给控制器，才有“刚新增的那行闪一下高亮”的效果。</li>
+          <li>开头 <code>if (NULL == $this-&gt;connection) return ...</code> 是防御式编程：数据库连不上时，上层拿到 <code>-1</code> 或 <code>false</code>，不会出现致命错误。</li>
+          <li><code>DELETE ... WHERE id = :id</code> 必须带 WHERE；否则就变成清空整张表（那是另一个 action <code>deleteAll</code> 的职责，且 demo 还没写）。</li>
+          <li><b>小瑕疵：</b><code>delete()</code> 的返回类型写成 <code>bool</code>，但连接失败时返回 <code>-1</code>；更规范应返回 <code>false</code>。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-db-user">
+    <header class="cmp-head">
+      <span class="file">db/modiy_db_user.php</span>
+      <span class="role">数据库脚本：为登录功能补一张 user 表</span>
+      <span class="badge new">demo 新增文件</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="cmp-empty">starter 中没有这个文件。当时只有 <code>db/create_database.php</code>，它建库、建 product 表并插入两条示例商品。</div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">db/modiy_db_user.php</div><pre><code>&lt;?php
+define('DB_NAME', 'demo1');
+
+// --------------------- for login -------
+// Make sure create_database.php run first   // 先建库，再补用户表
+
+$connection = new \PDO(
+    'mysql:dbname=' . DB_NAME . ';host=localhost:3306',
+    'root',
+    ''
+);
+$sql = 'CREATE TABLE IF NOT EXISTS user ('
+    . 'id integer PRIMARY KEY AUTO_INCREMENT,'
+    . 'username text,' . 'password text'
+    . ')';
+$stmt4 = $connection-&gt;prepare($sql);
+$stmt4-&gt;execute();
+
+// note: the password is Admin$123
+$sql = 'INSERT INTO user (username, password) ';
+$sql .= 'VALUES ("admin","$2y$10$YwpAqmsPv3s7Ca8mTpcMd.sFq5Lu2kEvi8D0HBBV5BfdB5n3ix9zO")';   // 存哈希，不存明文
+$stmt5 = $connection-&gt;prepare($sql);
+$stmt5-&gt;execute();</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>认证必须有用户数据源；老师不改动 starter 的建库脚本，而是<strong>另加一个增量脚本</strong>，这样“先跑 create_database.php，再跑本脚本”的顺序很清楚。</li>
+          <li><code>CREATE TABLE IF NOT EXISTS user</code> 保证重复运行不会因表已存在而报错。</li>
+          <li>密码字段存的是 <code>password_hash('Admin$123', PASSWORD_DEFAULT)</code> 的结果；登录时用 <code>password_verify()</code> 比对，数据库里永远看不到明文。</li>
+          <li><b>注意：</b>文件名 <code>modiy</code> 是 <code>modify</code> 的拼写错误，但实际文件就叫这个名字；另外 INSERT 没有唯一约束保护，重复运行会插入多条 admin。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-user">
+    <header class="cmp-head">
+      <span class="file">src/User.php</span>
+      <span class="role">用户实体：把“密码是否正确”封装成对象方法</span>
+      <span class="badge new">demo 新增文件</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="cmp-empty">starter 里完全没有 User 这个概念。</div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">User.php</div><pre><code>&lt;?php
+namespace CSIS3280;
+
+class User{
+    private $id;
+    private $username;
+    private $password;
+
+    /*
+    the password for admin username is created as follow
+    php -r "echo password_hash('Admin$123',PASSWORD_DEFAULT) . PHP_EOL;"
+    */
+
+    function getId() : int {
+        return $this-&gt;id;
+    }
+
+    function getUserName() : string {
+        return $this-&gt;username;
+    }
+
+    // Verify the password, pass in the hash for verification.
+    function verifyPassword(string $passwordToVerify) {
+        return password_verify($passwordToVerify, $this-&gt;password);   // 明文 vs 哈希
+    }
+}</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>课件第 29 页说明：项目没有注册功能，所以只需要 getter，不需要 setter；属性由 PDO 的 <code>FETCH_CLASS</code> 直接填充。</li>
+          <li><code>verifyPassword()</code> 把“怎么比对密码”藏在实体内部：<code>UserController</code> 只问一句 <code>true / false</code>，不接触哈希细节。</li>
+          <li>类上方的注释解释了管理员密码是怎么生成的，方便以后换密码时重新执行那条命令。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-user-repository">
+    <header class="cmp-head">
+      <span class="file">src/UserRepository.php</span>
+      <span class="role">用户数据访问：只做“按用户名查一条”</span>
+      <span class="badge new">demo 新增文件</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="cmp-empty">starter 中没有这个文件。</div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">UserRepository.php</div><pre><code>    public function find(string $username): ?User
+    {
+        if (NULL == $this-&gt;connection) return NULL;
+
+        $sql = 'SELECT * FROM user WHERE username = :user';   // 按用户名查一条
+        $stmt = $this-&gt;connection-&gt;prepare($sql);
+        $stmt-&gt;bindParam(':user', $username);
+        $stmt-&gt;execute();
+        $stmt-&gt;setFetchMode(\PDO::FETCH_CLASS, User::class);   // 直接映射成 User 对象
+        $user = $stmt-&gt;fetch();
+        if ($user == false) {
+            return NULL;                                      // 找不到返回 null
+        }
+        return $user;
+    }</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>和 <code>ProductRepository::find()</code> 完全同一套路：预处理 + 绑定 + <code>FETCH_CLASS</code>。老师是在复用自己已经建立的模式，而不是发明新写法。</li>
+          <li>返回类型 <code>?User</code> 明确告诉调用方“可能查不到”；所以 UserController 可以写 <code>if ($user &amp;&amp; ...)</code>。</li>
+          <li>构造函数同样复用 <code>Database</code> 类拿连接，认证和商品操作共用同一个数据库连接配置。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-user-controller">
+    <header class="cmp-head">
+      <span class="file">src/UserController.php</span>
+      <span class="role">用户控制器：只处理登录这一件事</span>
+      <span class="badge new">demo 新增文件</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="cmp-empty">starter 中没有这个文件。</div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">UserController.php</div><pre><code>class UserController extends Controller
+{
+    private userRepository $userRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this-&gt;userRepository = new UserRepository();   // 登录也要查数据库
+    }
+
+    public function processLogin(Array $data){
+        $username = $data['username'];
+        $password = $data['password'];
+
+        $user = $this-&gt;userRepository-&gt;find($username);
+
+        // authenticate
+        if($user &amp;&amp; $user-&gt;verifyPassword($password)){
+            if(session_status() === PHP_SESSION_NONE){
+                session_start();                        // 保险：会话没开就开
+            }
+            $_SESSION['username'] = $username;           // 登录凭证写进 session
+            $location = '/?action=products';
+            header("Location: $location");               // 成功进产品列表
+        }
+        // 注意：密码错时这里什么都不做，不会自动提示
+    }
+}</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>把认证从 Application 里抽出来，前端控制器只负责收集表单并转发，符合 MVC 分层。</li>
+          <li><code>$_SESSION['username']</code> 是整站登录状态的唯一标记：base 模板靠它显示菜单，logout 靠清掉它退出。</li>
+          <li><code>session_status() === PHP_SESSION_NONE</code> 是防御性写法；本项目 <code>public/index.php</code> 已经开过 session，所以通常不会触发。</li>
+          <li><b>未完成：</b>密码错误时方法体直接结束，没有跳转也没有错误提示；而且 Application 里没有实例化 <code>UserController</code>，login 分支会先撞上未定义属性错误。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-base">
+    <header class="cmp-head">
+      <span class="file">templates/base.html.twig</span>
+      <span class="role">公共布局：顶部导航菜单</span>
+      <span class="badge">按登录状态显示</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">base.html.twig（导航）</div><pre><code>&lt;ul class="nav nav-pills"&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link {% block homeLink %}{% endblock %}" href="/"&gt;Home page&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link {% block productLink %}{% endblock %}"
+           href="/?action=products"&gt;Product List page&lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">base.html.twig（导航）</div><pre><code>&lt;ul class="nav nav-pills"&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link {% block homeLink %}{% endblock %}" href="/"&gt;Home page&lt;/a&gt;
+    &lt;/li&gt;
+    {% if session.username is not empty %}   {# 只有登录后才显示受保护入口 #}
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link {% block productLink %}{% endblock %}"
+           href="/?action=products"&gt;Product List page&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link " href="/?action=logout"&gt;{{ session.username }} Logout&lt;/a&gt;   {# 显示当前用户 + 退出 #}
+    &lt;/li&gt;
+    {% endif %}
+&lt;/ul&gt;</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li><code>session</code> 这个 Twig 全局变量来自 <code>Controller::__construct()</code> 的 <code>addGlobal()</code>，不是模板自己能拿到的。</li>
+          <li><code>is not empty</code> 等价于“已登录”：没登录时 Product List 入口直接不渲染，这是课件第 35 页说的“保护页面菜单”。</li>
+          <li>Logout 链接指向 <code>?action=logout</code>，把退出动作交给前端控制器统一处理。</li>
+          <li><b>要注意：</b>这只是 UI 层隐藏；后端 action 仍未检查 session，所以直接敲 URL 仍能访问，真正的权限校验 demo 还没做。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-home">
+    <header class="cmp-head">
+      <span class="file">templates/home.html.twig</span>
+      <span class="role">首页：从“欢迎语”变成“登录入口”</span>
+      <span class="badge">改动较大</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">home.html.twig</div><pre><code>{% block body %}
+    &lt;h1&gt;Home page&lt;/h1&gt;
+    &lt;p&gt;
+        Welcome to the home page
+    &lt;/p&gt;
+{% endblock %}</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">home.html.twig（节选）</div><pre><code>{% block body %}
+    &lt;h1&gt;Home page&lt;/h1&gt;
+    {% if session.username is empty %}   {# 未登录：显示登录表单 #}
+    {% if error is not empty %}          {# 登录失败时显示错误 #}
+    &lt;div class="form-control is-invalid"&gt;
+        &lt;ul&gt;
+            &lt;li&gt;{{ error }}&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    {% endif %}
+
+    &lt;div class="formLogin"&gt;
+        &lt;form action="/?action=login" method="post"&gt;
+            &lt;input name="username" placeholder="Your username" class="form-control"&gt;
+            &lt;input name="password" id="password" type="password"
+                   placeholder="Your password" class="form-control"&gt;
+            &lt;input type="submit" class="btn btn-primary w-100" value="Log in"&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+    {% else %}                           {# 已登录：给一句权限说明 #}
+        &lt;p&gt;Depending on your login, you may be authorized to read the content ...&lt;/p&gt;
+    {% endif %}
+{% endblock %}</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>表单 <code>method="post"</code> + <code>action="/?action=login"</code> 正好对应 Application 新增的 login 分支；用 POST 是为了不把密码放进 URL。</li>
+          <li><code>type="password"</code> 让输入框掩码显示，是登录表单的基本体验要求。</li>
+          <li><code>error</code> 来自 <code>DefaultController::homepage($error)</code>；正常访问时是空字符串，所以错误区不显示。</li>
+          <li><code>session.username is empty / else</code> 让同一个首页同时服务游客和已登录用户：前者看到表单，后者看到说明文字。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-create">
+    <header class="cmp-head">
+      <span class="file">templates/product/create.html.twig</span>
+      <span class="role">新建产品表单：为验证错误预留显示位</span>
+      <span class="badge">配合 validate()</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter</h4>
+        <div class="codebox"><div class="codefile">create.html.twig（节选）</div><pre><code>&lt;form method="POST" action="/?action=processCreate"&gt;
+&lt;p&gt;
+    Description:
+    &lt;input name="description"&gt;
+&lt;/p&gt;
+&lt;p&gt;
+    Price:
+    &lt;input name="price" type="number" min="0" step="0.01"&gt;
+&lt;/p&gt;
+&lt;input type="submit" class="btn btn-primary"&gt;
+&lt;/form&gt;</code></pre></div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>week09_demo</h4>
+        <div class="codebox"><div class="codefile">create.html.twig（节选）</div><pre><code>{% if error is not empty %}   {# 验证失败时列出错误 #}
+&lt;div class="form-control is-invalid"&gt;
+    &lt;ul&gt;
+        {% for err in error %}&lt;li&gt;{{ err }}&lt;/li&gt;{% endfor %}
+    &lt;/ul&gt;
+&lt;/div&gt;
+&lt;br&gt;
+{% endif %}
+
+&lt;form method="POST" action="/?action=processCreate"&gt;
+&lt;p&gt;
+    Description:
+    &lt;input name="description" value={{ description }}&gt;   {# 回填，用户不用重打 #}
+&lt;/p&gt;
+&lt;p&gt;
+    Price:
+    &lt;input name="price" type="number" min="0" step="0.01" value= {{ price }}&gt;
+&lt;/p&gt;
+&lt;input type="submit" class="btn btn-primary"&gt;
+&lt;/form&gt;</code></pre></div>
+      </div>
+      <div class="cmp-col why">
+        <h4>中文注释：为什么加 / 功能</h4>
+        <ul>
+          <li>错误区用 <code>{% for err in error %}</code>，正好消费 <code>Product::validate()</code> 返回的错误数组：一个字段一条消息。</li>
+          <li><code>value={{ description }}</code> 和 <code>value={{ price }}</code> 做表单回填：验证失败后用户已填的内容还在，只需改错的那一项。</li>
+          <li><code>min="0" step="0.01"</code> 从 starter 就存在，是浏览器端的初级限制；服务端的 <code>filter_input</code> 才是真正可信的一层。</li>
+          <li><b>接线状态：</b>demo 的 Application 仍调用 <code>create()</code> 且没传 <code>formData</code>，所以这两块目前不会真正显示数据；课件 Page 23–25 才把 controller 和模板改成接收数组。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="cmp-card" id="cmp-unchanged">
+    <header class="cmp-head">
+      <span class="file">没有改动的文件</span>
+      <span class="role">starter 已经写好，老师直接拿来用</span>
+      <span class="badge same">保持一致</span>
+    </header>
+    <div class="cmp-grid">
+      <div class="cmp-col starter">
+        <h4>week09_starter 与 demo 完全相同</h4>
+        <div class="cmp-empty">这些文件两个文件夹里逐字节一致，不需要对比代码。</div>
+      </div>
+      <div class="cmp-col demo">
+        <h4>文件清单</h4>
+        <ul class="cmp-file-list">
+          <li><code>db/create_database.php</code>：建库、建 product 表、两条种子数据。</li>
+          <li><code>public/index.php</code>：引入 autoload、<code>session_start()</code>、运行 Application。</li>
+          <li><code>src/Database.php</code>：统一的 PDO 连接配置。</li>
+          <li><code>templates/error.html.twig</code>：独立错误页。</li>
+          <li><code>templates/product/edit.html.twig</code>：只读 id + 描述 + 价格表单。</li>
+          <li><code>templates/product/list.html.twig</code>：表格、高亮、Show/Edit/Delete 按钮、删除确认。</li>
+          <li><code>templates/product/list.html copy.twig</code>：列表的旧版备份，不参与渲染。</li>
+          <li><code>templates/product/show.html.twig</code>：详情页模板，已备好但后端 show action 还没接。</li>
+        </ul>
+      </div>
+      <div class="cmp-col why">
+        <h4>为什么这些不用改</h4>
+        <ul>
+          <li>老师刻意先把<b>前端模板和实体结构</b>准备好，学生只需按 action 顺序补后端空方法；所以 list / show / edit 模板在 starter 里就已经有完整按钮。</li>
+          <li><code>list.html.twig</code> 里的 <code>tr.active</code> 高亮、<code>confirm()</code> 确认框都依赖控制器传来的 <code>id</code> 和 session 高亮机制；后端补上后前端无需再动。</li>
+          <li><code>show.html.twig</code> 一直没变，恰好说明 demo 停在“show 分支还是空”的中途状态；课件 Page 19 才给出完整 show 实现。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</section>
 
 <section class="page" id="page-01" data-n="1">
   <div class="page-head">
