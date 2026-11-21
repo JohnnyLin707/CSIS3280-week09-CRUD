@@ -222,18 +222,22 @@ body.zh-only .col-zh{border-left:none}
 }
 .cmp-head .badge.new{background:#ecfdf5; color:#047857}
 .cmp-head .badge.same{background:#f3f4f6; color:#6b7280}
-.cmp-grid{display:grid; grid-template-columns:1fr 1fr 1fr}
+.cmp-grid{display:grid; grid-template-columns:1fr 1fr}
 .cmp-col{padding:14px 16px 18px; min-width:0; border-top:1px solid var(--line)}
 .cmp-col.starter{background:#fbfcfe; border-right:1px solid var(--line)}
-.cmp-col.demo{background:#fffdf8; border-right:1px solid var(--line)}
-.cmp-col.why{background:#f8fbff}
+.cmp-col.demo{background:#fffdf8; border-right:none}
+.cmp-col.why{
+  grid-column:1 / -1; background:#f8fbff; border-right:none;
+  border-top:1px solid #dbeafe;
+}
 .cmp-col h4{font-size:12px; margin:0 0 4px; letter-spacing:.5px}
 .cmp-col.starter h4{color:#6b7280}
 .cmp-col.demo h4{color:#b45309}
 .cmp-col.why h4{color:var(--accent)}
+.cmp-col.why h4::before{content:"↓ "}
 .cmp-col .codebox{margin-top:8px}
-.cmp-col.why ul{margin:6px 0 0; padding-left:18px}
-.cmp-col.why li{margin-bottom:8px; font-size:13px; line-height:1.6}
+.cmp-col.why ul{margin:6px 0 0; padding-left:20px; columns:2; column-gap:28px}
+.cmp-col.why li{margin-bottom:8px; font-size:13px; line-height:1.6; break-inside:avoid}
 .cmp-col.why code{
   background:#eef2ff; color:#3730a3; border-radius:4px; padding:1px 5px;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
@@ -251,6 +255,7 @@ body.zh-only .col-zh{border-left:none}
 @media (max-width:1200px){
   .cmp-grid{grid-template-columns:1fr}
   .cmp-col{border-right:none!important; border-bottom:1px solid var(--line)}
+  .cmp-col.why ul{columns:1}
 }
 @media print{
   .compare-root{padding:0}
@@ -329,7 +334,7 @@ body.zh-only .col-zh{border-left:none}
 <section id="compare-root" class="compare-root">
   <div class="section-intro compare-hero">
     <h1>week09_starter → week09_demo 代码横向对比</h1>
-    <p>左：starter 留下的空壳 · 中：demo 里老师真正写进去的代码 · 右：中文注释解释“为什么加这行 / 这行干什么”</p>
+    <p>上排：starter 空壳与 demo 改动横向并列 · 下方：中文注释整块说明“为什么加这行 / 这行干什么”</p>
   </div>
 
   <div class="cmp-note">
@@ -354,8 +359,8 @@ body.zh-only .col-zh{border-left:none}
   <div class="cmp-legend">
     <span><i class="l-start"></i>starter 原始代码</span>
     <span><i class="l-demo"></i>demo 改动后代码（含讲解注释）</span>
-    <span><i class="l-why"></i>为什么要加 / 功能是什么</span>
-    <span>表格在窄屏会自动上下堆叠，方便手机阅读。</span>
+    <span><i class="l-why"></i>为什么要加 / 功能是什么（位于两栏代码下方）</span>
+    <span>窄屏时 starter 与 demo 会自动上下堆叠，注释保持在对应卡片底部。</span>
   </div>
 
   <article class="cmp-card" id="cmp-application">
