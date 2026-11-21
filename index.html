@@ -177,6 +177,8 @@ body.zh-only .col-zh{border-left:none}
   border-bottom:2px solid var(--accent); padding-bottom:2px; white-space:nowrap;
 }
 .jump:hover{color:#1d4ed8}
+.jump-alt{color:var(--accent2);border-bottom-color:var(--accent2)}
+.jump-alt:hover{color:#0f5953}
 .compare-root{padding:26px 26px 6px}
 .compare-hero{background:linear-gradient(135deg,#0f766e,#1d4ed8)}
 .cmp-note{
@@ -184,6 +186,32 @@ body.zh-only .col-zh{border-left:none}
   border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:13.5px; color:#78350f;
 }
 .cmp-note b{color:#92400e}
+.halfway-card{margin-bottom:20px;border-color:#99f6e4}
+.halfway-head{
+  background:linear-gradient(135deg,#134e4a,#0f766e); color:#fff;
+  padding:12px 18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.halfway-head .hw-title{font-weight:700; font-size:15px}
+.halfway-head .hw-tag{
+  font-size:11px; border:1px solid rgba(255,255,255,.5);
+  border-radius:20px; padding:2px 9px;
+}
+.halfway-body{padding:16px 18px 18px; background:#fbfffe}
+.halfway-body h4{font-size:13px; margin:14px 0 6px; color:#0f766e}
+.halfway-body h4:first-child{margin-top:0}
+.halfway-body p,.halfway-body li{font-size:13px; line-height:1.65; margin-bottom:6px}
+.halfway-body ul{margin:0; padding-left:20px}
+.table-scroll{overflow-x:auto; margin:8px 0 4px}
+.halfway-table{border-collapse:collapse; width:100%; min-width:620px; font-size:12.5px}
+.halfway-table th,.halfway-table td{
+  border:1px solid #ccfbf1; padding:8px 10px; text-align:left; vertical-align:top;
+}
+.halfway-table th{background:#f0fdfa; color:#115e59; font-weight:700}
+.halfway-table td:first-child{white-space:nowrap; font-weight:600; color:#334155}
+.halfway-body .warn{
+  background:#fffbeb; border-left:3px solid #f59e0b; border-radius:0 7px 7px 0;
+  padding:10px 14px; color:#78350f; margin-top:12px; font-size:13px;
+}
 .timeline{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
   gap:10px; list-style:none; padding:0; margin:0 0 18px;
@@ -276,6 +304,7 @@ body.zh-only .col-zh{border-left:none}
   <div class="subtitle">CRUD (CH 29) — 中英对照教材 · 36 页</div>
   <div class="spacer"></div>
   <a class="jump" href="#compare-root">Starter → Demo 对比</a>
+  <a class="jump jump-alt" href="#halfway-note">demo_halfway 说明</a>
   <div class="controls">
     <button type="button" class="mode active" data-mode="both">双语</button>
     <button type="button" class="mode" data-mode="en-only">仅英文</button>
@@ -345,6 +374,56 @@ body.zh-only .col-zh{border-left:none}
     <code>Product::validate()</code> 加了但前端控制器还没调用它。课件后半部分（本页下方 Page 22–36）才把这些补齐。
     下面 demo 栏里的中文 <code>//</code> 和 <code>{# #}</code> 是为了讲解补写的注释，原始 demo 文件中没有。
   </div>
+
+  <article class="cmp-card halfway-card" id="halfway-note">
+    <header class="halfway-head">
+      <span class="hw-title">demo_halfway 是什么？老师在课堂中途上传的“进度快照”</span>
+      <span class="hw-tag">不是可运行成品</span>
+      <span class="hw-tag">增量代码参考</span>
+    </header>
+    <div class="halfway-body">
+      <p><b>一句话结论：</b><code>demo_halfway</code> 是老师在讲课中途上传给学生对照进度的中间状态。它展示的是“CRUD 核心 + 表单验证 + 登录界面/用户表已经写好，但登录后端还没接线”的那一刻，<strong>不应该整体拿去运行或部署</strong>。</p>
+
+      <p><b>它在教学序列中的位置：</b>
+        <code>week09_starter</code> → <code>demo_halfway</code>（CRUD 核心 + 验证/认证前端与用户表）→ <code>week09_demo</code>（补上登录后端）→ 课件后半段 Page 22–36（补全剩余 CRUD）。</p>
+
+      <h4>它相对 starter 已经做了什么</h4>
+      <ul>
+        <li>补上了 Create / Read / Edit 第一阶段 / Delete 的主线：<code>Application.php</code> 的 <code>create</code>、<code>processCreate</code>、<code>edit</code>、<code>delete</code> 不再是空 case；<code>ProductController.php</code> 和 <code>ProductRepository.php</code> 中对应的 <code>insert()</code>、<code>delete()</code> 等方法已实现。</li>
+        <li>加了表单验证的前半截：<code>Product.php</code> 增加 <code>validate()</code>；<code>create.html.twig</code> 增加错误列表和 <code>value={{ description }}</code> / <code>value={{ price }}</code> 回填。</li>
+        <li>加了登录界面的前半截：<code>home.html.twig</code> 已经有登录表单；<code>base.html.twig</code> 已经用 <code>{% if session.username is not empty %}</code> 控制 Product List 菜单，并显示 Logout 链接。</li>
+        <li>新增认证数据层文件：<code>db/modiy_db_user.php</code>（建 <code>user</code> 表并插入哈希密码的 admin）、<code>src/User.php</code>、<code>src/UserRepository.php</code>。</li>
+      </ul>
+
+      <h4>它和 week09_demo 的关键差别（为什么叫 halfway）</h4>
+      <div class="table-scroll">
+        <table class="halfway-table">
+          <thead>
+            <tr><th>项目</th><th>demo_halfway</th><th>week09_demo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>public/index.php</td><td>没有</td><td>有（前端控制器入口）</td></tr>
+            <tr><td>db/create_database.php</td><td>没有</td><td>有（建库、建 product 表）</td></tr>
+            <tr><td>UserController.php</td><td>没有</td><td>有（真正处理 login）</td></tr>
+            <tr><td>Controller.php</td><td>没有 <code>addGlobal('session', $_SESSION)</code></td><td>有，模板才能读到 <code>session.username</code></td></tr>
+            <tr><td>DefaultController::homepage()</td><td>无参数</td><td>收 <code>$error</code> 参数，可显示登录失败消息</td></tr>
+            <tr><td>Application.php</td><td>没有 <code>login</code> / <code>logout</code> case</td><td>有，但仍有 <code>$userController</code> 未实例化等问题</td></tr>
+            <tr><td>命名空间</td><td><code>Product</code> / <code>User</code> / <code>UserRepository</code> 用 <code>Mattsmithdev</code></td><td>统一改成 <code>CSIS3280</code></td></tr>
+            <tr><td>数据库名</td><td><code>modiy_db_user.php</code> 用 <code>demo29</code></td><td>改成 <code>demo1</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>老师上传它的实际用途</h4>
+      <ul>
+        <li><b>进度对照：</b>学生可以拿自己的代码和这个快照比，确认自己应该已经完成到哪一步。</li>
+        <li><b>增量代码参考：</b>它相当于一个 patch 包，告诉你这一阶段需要改哪些文件、加哪些新文件；正确做法是把这些内容复制进自己的 starter，而不是整体替换运行。</li>
+        <li><b>展示教学顺序：</b>老师刻意先做界面和表单验证，再接后端认证；<code>demo_halfway</code> 正好卡在两者之间。</li>
+      </ul>
+
+      <div class="warn"><b>如果直接拿它运行会怎样：</b>基本跑不起来。缺 <code>public/index.php</code> 入口，缺 <code>db/create_database.php</code> 建表；模板用了 <code>session</code> 但控制器没有注入；登录表单提交到 <code>?action=login</code> 却没有对应 action 和 <code>UserController</code>；<code>Mattsmithdev</code> 与 <code>CSIS3280</code> 命名空间不一致会导致类找不到。应把 <code>week09_demo</code> 当作接近成品的参考，而且它本身也还有未修完的点（<code>$userController</code> 未实例化、<code>Locatin</code> 拼写、<code>validate()</code> 未真正接线等）。</div>
+    </div>
+  </article>
 
   <ol class="timeline">
     <li><b>0 · 起点</b><span>starter 只有 products 列表能跑；实体、模板、仓储的 find()/findAll() 已备好，其余方法全是空壳。</span></li>
